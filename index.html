@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="index, follow" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <title>Cheers Keir — a collaborative leaving card</title>
+  <meta name="description" content="A collaborative leaving card for the outgoing Prime Minister. Sign before he goes." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Cheers Keir — a collaborative leaving card" />
+  <meta property="og:description" content="A collaborative leaving card for the outgoing Prime Minister. Sign before he goes." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://cheerskeir.com/" />
+  <meta property="og:image" content="https://cheerskeir.com/og.jpg" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cheers Keir — a collaborative leaving card" />
+  <meta name="twitter:description" content="A collaborative leaving card for the outgoing Prime Minister. Sign before he goes." />
+  <meta name="twitter:image" content="https://cheerskeir.com/og.jpg" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Cloudflare Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+  <!-- canvas-confetti (success state) — version pinned + SRI hash to guard against CDN/package compromise. -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"
+          integrity="sha384-Rv68Y7adOjMMJc1/xFMcdNvXre/HF51to4GZjBALmXr7ABnVl5V4UajJwBu7zbhN"
+          crossorigin="anonymous"
+          defer></script>
+
+  <style>
+    :root {
+      --paper: #F5EEDC;
+      --paper-shade: #ECE2C8;
+      --paper-deep: #D8C9A5;
+      --ink: #1F1B16;
+      --ink-soft: #4A4339;
+      --wine: #7B1F2A;
+      --wine-deep: #5A1620;
+      --gilt: #B8923B;
+      --postit-yellow: #FCE8A5;
+      --postit-pink:   #F7C7C2;
+      --postit-mint:   #C8E4C5;
+      --postit-blue:   #C6DCEB;
+      --postit-violet: #DCC8E6;
+      --postit-peach:  #F8D4A6;
+      --desk: #2B1F17;
+      --desk-soft: #3A2A1F;
+      --shadow: 0 18px 40px rgba(0,0,0,0.35), 0 6px 12px rgba(0,0,0,0.18);
+      --shadow-sm: 0 4px 14px rgba(0,0,0,0.18);
+      --radius: 10px;
+      --max: 1100px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% -10%, #4a3525 0%, var(--desk) 55%, #1a1109 100%);
+      color: var(--ink);
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    /* faint desk-grain overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                        radial-gradient(rgba(0,0,0,0.07) 1px, transparent 1px);
+      background-size: 3px 3px, 5px 5px;
+      background-position: 0 0, 1px 1px;
+      mix-blend-mode: overlay;
+    }
+
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 28px 20px 80px;
+      position: relative;
+    }
+
+    /* Header bar */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: #F2E5C9;
+      margin-bottom: 28px;
+    }
+    .brand {
+      font-family: 'Caveat', cursive;
+      font-size: 28px;
+      letter-spacing: 0.02em;
+      color: #FFEFC4;
+      text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+    }
+    .ticker {
+      background: rgba(0,0,0,0.32);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 999px;
+      padding: 8px 16px;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      backdrop-filter: blur(4px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .ticker-count {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 22px;
+      color: #FFE69A;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+    }
+    .ticker-label {
+      font-size: 13px;
+      color: #E7D6A5;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* Stage holds the card in perspective */
+    .stage {
+      perspective: 1800px;
+      perspective-origin: 50% 30%;
+    }
+
+    /* The card itself: starts CLOSED (just the cover). Opens to a spread. */
+    .card {
+      position: relative;
+      margin: 0 auto;
+      width: min(420px, 92vw);
+      transform-style: preserve-3d;
+      transition: width 800ms cubic-bezier(.2,.7,.2,1) 250ms;
+    }
+    .card.is-open { width: min(1040px, 96vw); }
+
+    /* Cover face: visible when closed, flips away on open */
+    .cover {
+      position: relative;
+      z-index: 3;
+      width: 100%;
+      aspect-ratio: 5 / 7;
+      background: linear-gradient(180deg, var(--paper) 0%, var(--paper-shade) 100%);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transform-origin: left center;
+      transform-style: preserve-3d;
+      transition: transform 900ms cubic-bezier(.7,0,.3,1), box-shadow 600ms ease, opacity 400ms 700ms;
+      cursor: pointer;
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+    .card.is-open .cover {
+      /* Pop out of flow so the spread can take the top of the card. */
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: min(420px, 92vw);
+      transform: rotateY(-168deg);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      pointer-events: none;
+    }
+
+    .cover::before {
+      /* deckled inner border */
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 1.5px solid rgba(123,31,42,0.32);
+      border-radius: calc(var(--radius) - 4px);
+      pointer-events: none;
+    }
+    .cover::after {
+      /* paper grain */
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(rgba(60,40,15,0.05) 1px, transparent 1px);
+      background-size: 4px 4px;
+      mix-blend-mode: multiply;
+      opacity: 0.5;
+    }
+
+    .cover-inner {
+      position: absolute;
+      inset: 28px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+    }
+    .cover-eyebrow {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--wine);
+    }
+    .cover-title {
+      font-family: 'Caveat', cursive;
+      font-weight: 700;
+      font-size: clamp(48px, 9vw, 84px);
+      line-height: 0.95;
+      color: var(--wine-deep);
+      margin: 2px 0 0;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    }
+    .cover-photo {
+      width: 78%;
+      max-width: 300px;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      object-position: 50% 22%;
+      border-radius: 4px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25), 0 0 0 6px var(--paper), 0 0 0 7px rgba(0,0,0,0.18);
+      background: #d6cdb6;
+      margin-top: 4px;
+    }
+    .cover-fallback { display: none; }
+    .cover-inner.no-photo .cover-fallback {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 78%;
+      max-width: 300px;
+      aspect-ratio: 4 / 5;
+      margin-top: 4px;
+      border: 1.5px solid rgba(123,31,42,0.22);
+      border-radius: 4px;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 14px, rgba(123,31,42,0.04) 14px 15px),
+        linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(123,31,42,0.03) 100%);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18), 0 0 0 6px var(--paper), 0 0 0 7px rgba(0,0,0,0.18);
+    }
+    .cover-fallback .seal {
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%, var(--wine) 0%, var(--wine-deep) 80%);
+      color: #FFEFC4;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 30px;
+      letter-spacing: 0.02em;
+      display: grid;
+      place-items: center;
+      transform: rotate(-6deg);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.22), inset 0 -4px 8px rgba(0,0,0,0.18), inset 0 2px 4px rgba(255,255,255,0.18);
+      border: 2px solid rgba(123,31,42,0.35);
+    }
+    .cover-fallback .seal-sub {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 12px;
+      color: var(--ink-soft);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .cover-caption {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: var(--ink-soft);
+      max-width: 28ch;
+      margin-top: 6px;
+    }
+    .cover-cta {
+      margin-top: auto;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--wine);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cover-cta::before, .cover-cta::after {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.5;
+    }
+
+    /* Inside spread: revealed when card is open */
+    .spread {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background: linear-gradient(180deg, var(--paper) 0%, var(--paper-shade) 100%);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      min-height: 620px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 500ms 600ms ease, transform 700ms 600ms cubic-bezier(.2,.7,.2,1);
+    }
+    .card.is-open .spread { opacity: 1; transform: translateY(0); }
+
+    /* Fold crease down the middle */
+    .spread::before {
+      content: "";
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 1px;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.18) 12%, rgba(0,0,0,0.18) 88%, transparent);
+      pointer-events: none;
+    }
+    .spread::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(rgba(60,40,15,0.04) 1px, transparent 1px);
+      background-size: 4px 4px;
+      mix-blend-mode: multiply;
+      opacity: 0.5;
+    }
+
+    .page {
+      padding: 36px 36px 32px;
+      position: relative;
+    }
+    .page-eyebrow {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--wine);
+      margin: 0 0 6px;
+    }
+    .page-title {
+      font-family: 'Caveat', cursive;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 1;
+      color: var(--ink);
+      margin: 0 0 18px;
+    }
+
+    /* Left page: message wall */
+    .wall {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      max-height: 520px;
+      overflow-y: auto;
+      padding-right: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--paper-deep) transparent;
+    }
+    .wall::-webkit-scrollbar { width: 6px; }
+    .wall::-webkit-scrollbar-thumb { background: var(--paper-deep); border-radius: 3px; }
+
+    .note {
+      padding: 14px 14px 12px;
+      border-radius: 3px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12), 0 1px 0 rgba(0,0,0,0.05) inset;
+      font-family: 'Caveat', cursive;
+      font-size: 20px;
+      line-height: 1.2;
+      color: var(--ink);
+      transform: rotate(var(--tilt, -1deg));
+      position: relative;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+    }
+    .note::before {
+      /* tape */
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-3deg);
+      width: 44px;
+      height: 14px;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+    .note .who {
+      display: block;
+      margin-top: 8px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      color: var(--ink-soft);
+      opacity: 0.85;
+    }
+    .note:nth-child(6n+1) { background: var(--postit-yellow); --tilt: -1.6deg; }
+    .note:nth-child(6n+2) { background: var(--postit-pink);   --tilt:  1.2deg; }
+    .note:nth-child(6n+3) { background: var(--postit-mint);   --tilt: -0.8deg; }
+    .note:nth-child(6n+4) { background: var(--postit-blue);   --tilt:  1.6deg; }
+    .note:nth-child(6n+5) { background: var(--postit-violet); --tilt: -1.1deg; }
+    .note:nth-child(6n+6) { background: var(--postit-peach);  --tilt:  0.9deg; }
+
+    .empty {
+      grid-column: 1 / -1;
+      padding: 24px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+    }
+
+    /* Right page: sign form */
+    .sign {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+    .field .req { color: var(--wine); margin-left: 3px; }
+    .field input,
+    .field textarea {
+      width: 100%;
+      font: inherit;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--ink);
+      background: #FBF7EA;
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 6px;
+      padding: 10px 12px;
+      transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+    .field textarea {
+      min-height: 96px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+    .field input:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--wine);
+      box-shadow: 0 0 0 3px rgba(123,31,42,0.16);
+      background: #fff;
+    }
+    .field .hint {
+      font-size: 12px;
+      color: var(--ink-soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .field .err { color: var(--wine); font-size: 12px; min-height: 1em; }
+
+    .turnstile-wrap { min-height: 65px; display: flex; align-items: center; }
+
+    .submit {
+      appearance: none;
+      border: none;
+      background: linear-gradient(180deg, var(--wine) 0%, var(--wine-deep) 100%);
+      color: #FFEFC4;
+      font: 600 16px 'Inter', sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 14px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(123,31,42,0.30), inset 0 1px 0 rgba(255,255,255,0.18);
+      transition: transform 120ms ease, box-shadow 200ms ease, opacity 160ms ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .submit:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(123,31,42,0.35), inset 0 1px 0 rgba(255,255,255,0.18); }
+    .submit:active { transform: translateY(0); }
+    .submit:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .submit .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+    .submit.is-loading .spinner { display: inline-block; }
+    .submit.is-loading .label { opacity: 0.7; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .consent {
+      font-size: 12px;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+    .consent a { color: var(--wine); }
+
+    /* Thank-you state */
+    .thanks {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+      padding: 24px 12px;
+    }
+    .thanks .mark {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--wine);
+      color: #FFEFC4;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      font-family: 'Caveat', cursive;
+      box-shadow: 0 6px 14px rgba(123,31,42,0.30);
+    }
+    .thanks h3 {
+      font-family: 'Caveat', cursive;
+      font-weight: 700;
+      font-size: 38px;
+      color: var(--ink);
+      margin: 6px 0 0;
+    }
+    .thanks p {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--ink-soft);
+      max-width: 28ch;
+      margin: 0;
+    }
+    .thanks .share-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .share-btn {
+      background: #FBF7EA;
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font: 500 13px 'Inter', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: background 160ms ease, transform 120ms ease;
+      text-decoration: none;
+    }
+    .share-btn:hover { background: #fff; transform: translateY(-1px); }
+
+    .form-shown .sign-form { display: flex; }
+    .form-shown .thanks { display: none; }
+    .form-hidden .sign-form { display: none; }
+    .form-hidden .thanks { display: flex; }
+
+    /* Footer */
+    .credit {
+      margin-top: 28px;
+      text-align: center;
+      color: rgba(242,229,201,0.65);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+    .credit em { color: rgba(242,229,201,0.85); font-style: italic; }
+
+    /* Mobile */
+    @media (max-width: 760px) {
+      .wrap { padding: 18px 14px 60px; }
+      .topbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .ticker { align-self: center; }
+      .card { width: 100%; max-width: 460px; }
+      .card.is-open { width: 100%; max-width: 460px; }
+      .card.is-open .cover { width: 100%; max-width: 460px; }
+      .spread {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+      .spread::before {
+        left: 0; right: 0; top: 50%; bottom: auto;
+        width: 100%; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(0,0,0,0.18) 12%, rgba(0,0,0,0.18) 88%, transparent);
+      }
+      .page { padding: 24px 22px; }
+      .wall { max-height: 360px; }
+      .cover-inner { inset: 22px 18px 18px; }
+      .cover-fallback .seal { width: 92px; height: 92px; font-size: 26px; }
+    }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      .cover, .spread, .card { transition: none !important; }
+      .submit .spinner { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="topbar">
+      <div class="brand">Cheers Keir</div>
+      <div class="ticker" aria-live="polite" aria-atomic="true">
+        <span class="ticker-count" id="signatureCount">—</span>
+        <span class="ticker-label">people have signed</span>
+      </div>
+    </header>
+
+    <div class="stage">
+      <article class="card" id="card" aria-label="A leaving card for the outgoing Prime Minister">
+
+        <!-- Cover -->
+        <section class="cover" id="cover" role="button" tabindex="0" aria-label="Open the card">
+          <div class="cover-inner">
+            <div class="cover-eyebrow">From the office &nbsp;·&nbsp; A small token</div>
+            <h1 class="cover-title">Cheers, Keir</h1>
+            <img class="cover-photo" id="coverPhoto" src="keir.jpg" alt="Outgoing Prime Minister" onerror="this.style.display='none'; this.parentNode.classList.add('no-photo');" />
+            <div class="cover-fallback" aria-hidden="true">
+              <div class="seal">K.S.</div>
+              <div class="seal-sub">Est. July 2024</div>
+            </div>
+            <p class="cover-caption">A collaborative leaving card for the outgoing Prime Minister. Sign before he goes.</p>
+            <div class="cover-cta" aria-hidden="true">Click to open</div>
+          </div>
+        </section>
+
+        <!-- Inside spread -->
+        <section class="spread" aria-hidden="true" id="spread" inert>
+          <!-- LEFT PAGE: messages -->
+          <div class="page page-left">
+            <p class="page-eyebrow">From everyone who'd like to say</p>
+            <h2 class="page-title">A few kind words</h2>
+            <div class="wall" id="wall" aria-live="polite">
+              <div class="empty">Loading the kind words…</div>
+            </div>
+          </div>
+
+          <!-- RIGHT PAGE: sign form -->
+          <div class="page page-right form-shown" id="signPage">
+            <p class="page-eyebrow">A small contribution from</p>
+            <h2 class="page-title">Add your name</h2>
+
+            <form class="sign sign-form" id="signForm" novalidate>
+              <div class="field">
+                <label for="message">Your message <span class="req" aria-hidden="true">*</span></label>
+                <textarea id="message" name="message" required maxlength="280" placeholder="Wishing you all the best for whatever comes next…"></textarea>
+                <div class="hint">
+                  <span>Keep it sharp, not nasty.</span>
+                  <span><span id="charCount">0</span>/280</span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="name">Display name <span style="font-weight:400; text-transform:none; letter-spacing:0; color:var(--ink-soft);">(optional)</span></label>
+                <input id="name" name="name" type="text" maxlength="60" placeholder="What we'll print next to your message" autocomplete="name" />
+              </div>
+
+              <div class="field">
+                <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
+                <input id="email" name="email" type="email" required maxlength="120" placeholder="you@example.com" autocomplete="email" inputmode="email" />
+                <div class="hint">
+                  <span>We'll add you to our newsletter. Unsubscribe any time.</span>
+                </div>
+              </div>
+
+              <div class="turnstile-wrap">
+                <!--
+                  TODO: replace data-sitekey with the real key from Cloudflare → Turnstile dashboard.
+                  This is PUBLIC by design; safe to inline.
+                -->
+                <div class="cf-turnstile"
+                     data-sitekey="0x4AAAAAAA_REPLACE_ME_SITEKEY"
+                     data-theme="light"
+                     data-size="flexible"></div>
+              </div>
+
+              <div class="err" id="formError" role="alert" aria-live="assertive"></div>
+
+              <button type="submit" class="submit" id="submitBtn">
+                <span class="spinner" aria-hidden="true"></span>
+                <span class="label">Sign the card</span>
+              </button>
+
+              <p class="consent">
+                By signing you agree to your message appearing on this page if selected, and to receiving occasional updates by email. No tracking pixels, no resold lists.
+              </p>
+            </form>
+
+            <div class="thanks" aria-live="polite">
+              <div class="mark">✓</div>
+              <h3>Signed.</h3>
+              <p>If your note's a good one, you'll see it on the wall soon.</p>
+              <div class="share-row">
+                <a class="share-btn" id="shareTwitter" href="#" target="_blank" rel="noopener">Share on X</a>
+                <a class="share-btn" id="shareWhatsApp" href="#" target="_blank" rel="noopener">Share on WhatsApp</a>
+                <button type="button" class="share-btn" id="copyLink">Copy link</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+
+    <p class="credit">A parody. Not affiliated with the Prime Minister, his office, or any political party. Made with <em>affection</em>.</p>
+  </main>
+
+  <script>
+    // ----- Utilities -----
+    const $ = (sel, root) => (root || document).querySelector(sel);
+    const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+
+    function escapeHTML(str) {
+      return String(str).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+
+    function isValidEmail(s) {
+      // Conservative client-side check. Server does the real one.
+      return typeof s === 'string'
+        && s.length <= 120
+        && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+    }
+
+    function debounce(fn, ms) {
+      let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+    }
+
+    // ----- Card open animation -----
+    const card = $('#card');
+    const cover = $('#cover');
+    function openCard() {
+      if (card.classList.contains('is-open')) return;
+      card.classList.add('is-open');
+      const spread = $('#spread');
+      spread.setAttribute('aria-hidden', 'false');
+      spread.removeAttribute('inert');  // re-enable keyboard / AT discovery
+      // After open, move focus to the message field for accessibility
+      setTimeout(() => { $('#message').focus({ preventScroll: true }); }, 1200);
+    }
+    cover.addEventListener('click', openCard);
+    cover.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCard(); }
+    });
+
+    // ----- Load curated messages -----
+    //
+    // SECURITY: messages.json content is user-authored (Patrick curates it) and
+    // must NEVER be rendered via innerHTML / insertAdjacentHTML / setAttribute('on*').
+    // Every field below uses textContent, which renders the value as plain text
+    // even if it contains HTML or script syntax. Do not refactor this loop to use
+    // template strings + innerHTML, even if it feels cleaner — that reintroduces
+    // a JSON-controlled XSS sink.
+    async function loadMessages() {
+      const wall = $('#wall');
+      try {
+        const res = await fetch('messages.json', { cache: 'no-cache' });
+        if (!res.ok) throw new Error('failed to load messages');
+        const data = await res.json();
+        const items = Array.isArray(data) ? data : (data.messages || []);
+        wall.innerHTML = '';
+        if (!items.length) {
+          const empty = document.createElement('div');
+          empty.className = 'empty';
+          empty.textContent = 'Be the first to leave a few kind words.';
+          wall.appendChild(empty);
+          return;
+        }
+        // Render messages safely (textContent only — see SECURITY note above).
+        items.forEach(m => {
+          const note = document.createElement('div');
+          note.className = 'note';
+          const msg = document.createElement('span');
+          msg.textContent = String(m.message || '').slice(0, 320);
+          const who = document.createElement('span');
+          who.className = 'who';
+          const name = (m.name || '').toString().trim();
+          who.textContent = '— ' + (name || 'Anonymous');
+          note.appendChild(msg);
+          note.appendChild(who);
+          wall.appendChild(note);
+        });
+      } catch (err) {
+        wall.innerHTML = '';
+        const empty = document.createElement('div');
+        empty.className = 'empty';
+        empty.textContent = 'Messages will appear here once they’re ready.';
+        wall.appendChild(empty);
+      }
+    }
+
+    // ----- Signature ticker -----
+    function animateCount(el, to, duration = 1200) {
+      const from = 0;
+      const start = performance.now();
+      const fmt = new Intl.NumberFormat('en-GB');
+      function tick(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const v = Math.floor(from + (to - from) * eased);
+        el.textContent = fmt.format(v);
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+    async function loadCount() {
+      const el = $('#signatureCount');
+      try {
+        const res = await fetch('/api/count', { cache: 'no-store' });
+        if (!res.ok) throw new Error('count failed');
+        const { count } = await res.json();
+        if (typeof count === 'number' && count >= 0) animateCount(el, count);
+        else el.textContent = '—';
+      } catch (e) {
+        el.textContent = '—';
+      }
+    }
+
+    // ----- Character counter -----
+    const msgInput = $('#message');
+    const charCount = $('#charCount');
+    msgInput.addEventListener('input', () => {
+      charCount.textContent = String(msgInput.value.length);
+    });
+
+    // ----- Form submit -----
+    const form = $('#signForm');
+    const submitBtn = $('#submitBtn');
+    const formError = $('#formError');
+    const signPage = $('#signPage');
+
+    function setError(msg) { formError.textContent = msg || ''; }
+
+    function getTurnstileToken() {
+      // Turnstile injects a hidden input named 'cf-turnstile-response' into the form.
+      const input = form.querySelector('input[name="cf-turnstile-response"]');
+      return input ? input.value : '';
+    }
+
+    function resetTurnstile() {
+      if (window.turnstile && typeof window.turnstile.reset === 'function') {
+        try { window.turnstile.reset(); } catch (e) { /* no-op */ }
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      setError('');
+      const message = msgInput.value.trim();
+      const name = $('#name').value.trim();
+      const email = $('#email').value.trim();
+      const token = getTurnstileToken();
+
+      if (!message) { setError('Add a message before signing.'); msgInput.focus(); return; }
+      if (message.length > 280) { setError('Messages are capped at 280 characters.'); msgInput.focus(); return; }
+      if (!isValidEmail(email)) { setError('That email doesn’t look right.'); $('#email').focus(); return; }
+      if (!token) { setError('Please complete the human check before signing.'); return; }
+
+      submitBtn.disabled = true;
+      submitBtn.classList.add('is-loading');
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ message, name, email, turnstileToken: token })
+        });
+
+        if (res.status === 429) {
+          setError('Slow down a moment — please try again shortly.');
+          resetTurnstile();
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('is-loading');
+          return;
+        }
+
+        if (!res.ok) {
+          let body = {};
+          try { body = await res.json(); } catch (_) {}
+          const reason = (body && body.error) ? String(body.error).slice(0, 200) : 'Something went wrong. Try again?';
+          setError(reason);
+          resetTurnstile();
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('is-loading');
+          return;
+        }
+
+        // Success!
+        signPage.classList.remove('form-shown');
+        signPage.classList.add('form-hidden');
+
+        // Confetti
+        if (window.confetti) {
+          const burst = (opts) => window.confetti(Object.assign({
+            spread: 70, ticks: 200, gravity: 0.9, scalar: 0.9,
+            colors: ['#7B1F2A', '#B8923B', '#1F1B16', '#F5EEDC', '#FCE8A5', '#C6DCEB']
+          }, opts));
+          burst({ particleCount: 80, origin: { y: 0.4 } });
+          setTimeout(() => burst({ particleCount: 50, origin: { y: 0.6, x: 0.2 } }), 220);
+          setTimeout(() => burst({ particleCount: 50, origin: { y: 0.6, x: 0.8 } }), 360);
+        }
+
+        // Wire share row
+        const shareText = encodeURIComponent('I just signed Keir’s leaving card. You should too.');
+        const shareUrl  = encodeURIComponent('https://cheerskeir.com/');
+        $('#shareTwitter').href = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`;
+        $('#shareWhatsApp').href = `https://wa.me/?text=${shareText}%20${shareUrl}`;
+        $('#copyLink').addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText('https://cheerskeir.com/');
+            const b = $('#copyLink');
+            const old = b.textContent;
+            b.textContent = 'Copied!';
+            setTimeout(() => { b.textContent = old; }, 1400);
+          } catch (_) {}
+        }, { once: true });
+
+        // Refresh count
+        loadCount();
+      } catch (err) {
+        setError('We couldn’t reach the server. Check your connection and try again.');
+        resetTurnstile();
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('is-loading');
+      }
+    });
+
+    // ----- Boot -----
+    document.addEventListener('DOMContentLoaded', () => {
+      loadMessages();
+      loadCount();
+    });
+  </script>
+</body>
+</html>
