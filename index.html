@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="A collaborative leaving card for the outgoing Prime Minister. Sign before he goes." />
   <meta name="twitter:image" content="https://cheerskeir.com/og.jpg" />
 
-  <!-- Fonts -->
+  <!-- Fonts — LFG brand: Octarine for headlines (lowercase), DM Sans for body. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400;1,9..40,500&display=swap" rel="stylesheet" />
 
   <!-- Cloudflare Turnstile -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -37,28 +37,60 @@
           defer></script>
 
   <style>
+    /* LFG brand fonts — drop Octarine-Bold.otf + Octarine-Light.otf into /fonts/
+       to activate. Until then, headlines render in DM Sans Black (also a brand
+       font, listed in the bible). */
+    @font-face {
+      font-family: 'Octarine';
+      src: url('fonts/Octarine-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Octarine';
+      src: url('fonts/Octarine-Light.otf') format('opentype');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root {
+      /* LFG brand palette (per the brand bible) */
+      --lfg-black:   #000000;
+      --lfg-orange:  #FE5500;
+      --lfg-yellow:  #EE9944;
+      --lfg-teal:    #79CAC4;
+      --lfg-cream:   #EBE3D0;
+
+      /* Functional tokens */
       --paper:       #FFFFFF;
-      --paper-shade: #F8FAFC;
-      --paper-deep:  #E2E8F0;
-      --ink:         #0F172A;
-      --ink-soft:    #475569;
-      --ink-mute:    #94A3B8;
-      --accent:      #DC2626;
-      --accent-deep: #991B1B;
-      --postit-yellow: #FEF08A;
-      --postit-pink:   #FBCFE8;
-      --postit-mint:   #BBF7D0;
-      --postit-blue:   #BAE6FD;
-      --postit-violet: #DDD6FE;
-      --postit-peach:  #FED7AA;
-      --bg-top:      #F0F9FF;
-      --bg-bottom:   #FEF9C3;
-      --hairline:    rgba(15,23,42,0.10);
-      --shadow:      0 20px 50px rgba(15,23,42,0.12), 0 6px 16px rgba(15,23,42,0.06);
-      --shadow-sm:   0 4px 14px rgba(15,23,42,0.08);
-      --radius:      12px;
+      --paper-shade: #FAF6EC;          /* slightly cooler cream for card shading */
+      --bg:          var(--lfg-cream);
+      --ink:         var(--lfg-black);
+      --ink-soft:    #4A453B;          /* warm dark on cream */
+      --ink-mute:    #8A8478;
+      --accent:      var(--lfg-orange);
+      --accent-2:    var(--lfg-teal);
+      --accent-3:    var(--lfg-yellow);
+
+      /* Post-its: brand-palette tints */
+      --postit-cream:  #F4ECD7;
+      --postit-teal:   #C2E1DE;
+      --postit-yellow: #F6CFA1;
+      --postit-orange: #FFC5A8;
+      --postit-mint:   #D4E7C9;
+      --postit-blush:  #F2D3CC;
+
+      --hairline:    rgba(0,0,0,0.12);
+      --shadow:      0 22px 50px rgba(0,0,0,0.12), 0 6px 16px rgba(0,0,0,0.06);
+      --shadow-sm:   0 4px 14px rgba(0,0,0,0.08);
+      --radius:      6px;              /* squarer = more LFG */
       --max:         1100px;
+
+      /* Headline / body font stacks */
+      --font-display: 'Octarine', 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      --font-body:    'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     }
 
     * { box-sizing: border-box; }
@@ -66,18 +98,29 @@
 
     body {
       min-height: 100vh;
-      background:
-        radial-gradient(circle at 18% 0%, rgba(186, 230, 253, 0.65) 0%, transparent 55%),
-        radial-gradient(circle at 90% 110%, rgba(254, 240, 138, 0.55) 0%, transparent 60%),
-        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+      background: var(--bg);
       color: var(--ink);
-      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      font-family: var(--font-body);
       font-size: 16px;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
       overflow-x: hidden;
     }
+
+    /* The LFG graphical motif — three stacked progress bars in brand colours,
+       fixed to the top edge of the page like a campaign banner. */
+    .motif {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin: 0 0 20px;
+    }
+    .motif > span { display: block; height: 6px; }
+    .motif > span:nth-child(1) { background: var(--lfg-orange); width: 62%; }
+    .motif > span:nth-child(2) { background: var(--lfg-teal);   width: 38%; }
+    .motif > span:nth-child(3) { background: var(--lfg-black);  width: 18%; }
 
     .wrap {
       max-width: var(--max);
@@ -93,39 +136,50 @@
       justify-content: space-between;
       gap: 18px;
       color: var(--ink);
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
     .brand {
-      font-family: 'Inter', system-ui, sans-serif;
-      font-size: 22px;
-      font-weight: 800;
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
       letter-spacing: -0.02em;
       color: var(--ink);
+      line-height: 1;
+    }
+    .brand-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: var(--lfg-orange);
+      margin-right: 6px;
+      vertical-align: 1px;
     }
     .ticker {
-      background: #FFFFFF;
-      border: 1px solid var(--hairline);
-      border-radius: 999px;
-      padding: 8px 16px;
+      background: var(--lfg-black);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 0;
+      padding: 10px 16px;
       display: inline-flex;
       align-items: baseline;
       gap: 10px;
-      box-shadow: var(--shadow-sm);
     }
     .ticker-count {
-      font-family: 'Inter', system-ui, sans-serif;
-      font-weight: 800;
-      font-size: 20px;
-      color: var(--accent);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--lfg-orange);
       font-variant-numeric: tabular-nums;
       letter-spacing: -0.01em;
+      line-height: 1;
     }
     .ticker-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--ink-soft);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: 0.10em;
+      text-transform: lowercase;
     }
 
     /* Stage holds the card in perspective */
@@ -151,7 +205,7 @@
       width: 100%;
       aspect-ratio: 5 / 7;
       background: linear-gradient(180deg, var(--paper) 0%, var(--paper-shade) 100%);
-      border-radius: var(--radius);
+      border-radius: 0;
       box-shadow: var(--shadow);
       overflow: hidden;
       transform-origin: left center;
@@ -173,52 +227,74 @@
     }
 
     .cover::before {
-      /* subtle inner hairline */
+      /* thin black inner hairline — LFG poster feel */
       content: "";
       position: absolute;
-      inset: 12px;
-      border: 1px solid var(--hairline);
-      border-radius: calc(var(--radius) - 4px);
+      inset: 10px;
+      border: 1px solid var(--lfg-black);
       pointer-events: none;
     }
 
     .cover-inner {
       position: absolute;
-      inset: 32px 24px 22px;
+      inset: 28px 22px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 16px;
+      gap: 14px;
     }
     .cover-eyebrow {
-      font-family: 'Inter', system-ui, sans-serif;
-      font-weight: 600;
+      font-family: var(--font-body);
+      font-weight: 700;
       font-size: 11px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: lowercase;
+      color: var(--ink);
+    }
+    .cover-eyebrow .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--lfg-orange);
+      margin: 0 8px;
+      vertical-align: 2px;
     }
     .cover-title {
-      font-family: 'Inter', system-ui, sans-serif;
-      font-weight: 900;
-      font-size: clamp(44px, 8vw, 72px);
-      line-height: 0.95;
-      letter-spacing: -0.04em;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(48px, 9vw, 80px);
+      line-height: 0.92;
+      letter-spacing: -0.03em;
       color: var(--ink);
-      margin: 2px 0 0;
+      margin: 0;
     }
-    .cover-title .accent { color: var(--accent); }
+    /* The LFG underline motif — chunky coloured bar under the key word. */
+    .cover-title .accent {
+      position: relative;
+      display: inline-block;
+      color: var(--ink);
+    }
+    .cover-title .accent::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -2px;
+      height: 8px;
+      background: var(--lfg-orange);
+      z-index: -1;
+    }
     .cover-photo {
-      width: 78%;
-      max-width: 300px;
+      width: 76%;
+      max-width: 290px;
       aspect-ratio: 4 / 5;
       object-fit: cover;
       object-position: 50% 22%;
-      border-radius: 8px;
-      box-shadow: 0 10px 28px rgba(15,23,42,0.18), 0 0 0 6px #FFFFFF, 0 0 0 7px var(--hairline);
+      border-radius: 0;
+      box-shadow: 0 0 0 5px var(--lfg-black), 8px 8px 0 5px var(--lfg-orange);
       background: var(--paper-shade);
-      margin-top: 4px;
+      margin: 4px 0 0;
     }
     .cover-fallback { display: none; }
     .cover-inner.no-photo .cover-fallback {
@@ -227,66 +303,63 @@
       align-items: center;
       justify-content: center;
       gap: 12px;
-      width: 78%;
-      max-width: 300px;
+      width: 76%;
+      max-width: 290px;
       aspect-ratio: 4 / 5;
       margin-top: 4px;
-      border: 1px solid var(--hairline);
-      border-radius: 8px;
-      background:
-        repeating-linear-gradient(135deg, transparent 0 14px, rgba(15,23,42,0.03) 14px 15px),
-        linear-gradient(180deg, #FFFFFF 0%, var(--paper-shade) 100%);
-      box-shadow: 0 10px 28px rgba(15,23,42,0.14), 0 0 0 6px #FFFFFF, 0 0 0 7px var(--hairline);
+      background: var(--paper-shade);
+      box-shadow: 0 0 0 5px var(--lfg-black), 8px 8px 0 5px var(--lfg-orange);
     }
     .cover-fallback .seal {
-      width: 112px;
-      height: 112px;
+      width: 108px;
+      height: 108px;
       border-radius: 50%;
-      background: radial-gradient(circle at 38% 32%, #F87171 0%, var(--accent) 55%, var(--accent-deep) 100%);
-      color: #FFFFFF;
-      font-family: 'Inter', system-ui, sans-serif;
-      font-weight: 800;
-      font-size: 30px;
-      letter-spacing: -0.01em;
+      background: var(--lfg-orange);
+      color: var(--lfg-black);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
       display: grid;
       place-items: center;
       transform: rotate(-6deg);
-      box-shadow: 0 8px 18px rgba(220,38,38,0.30), inset 0 -3px 6px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.28);
+      box-shadow: 0 8px 18px rgba(254,85,0,0.30);
     }
     .cover-fallback .seal-sub {
-      font-family: 'Inter', system-ui, sans-serif;
-      font-weight: 600;
+      font-family: var(--font-body);
+      font-weight: 700;
       font-size: 11px;
-      color: var(--ink-soft);
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+      color: var(--ink);
+      letter-spacing: 0.14em;
+      text-transform: lowercase;
     }
     .cover-caption {
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 400;
       color: var(--ink-soft);
-      max-width: 28ch;
+      max-width: 30ch;
       margin-top: 6px;
-      line-height: 1.4;
+      line-height: 1.45;
     }
     .cover-cta {
       margin-top: auto;
+      font-family: var(--font-body);
       font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: lowercase;
+      color: var(--ink);
       display: inline-flex;
       align-items: center;
       gap: 10px;
     }
     .cover-cta::before, .cover-cta::after {
       content: "";
-      width: 24px;
-      height: 1.5px;
-      background: currentColor;
-      opacity: 0.55;
+      width: 20px;
+      height: 2px;
+      background: var(--lfg-orange);
     }
 
     /* Inside spread: revealed when card is open */
@@ -296,7 +369,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 0;
       background: linear-gradient(180deg, var(--paper) 0%, var(--paper-shade) 100%);
-      border-radius: var(--radius);
+      border-radius: 0;
       overflow: hidden;
       box-shadow: var(--shadow);
       min-height: 620px;
@@ -332,19 +405,29 @@
       position: relative;
     }
     .page-eyebrow {
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin: 0 0 8px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: lowercase;
+      color: var(--ink);
+      margin: 0 0 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .page-eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 18px;
+      height: 3px;
+      background: var(--lfg-orange);
     }
     .page-title {
-      font-family: 'Inter', system-ui, sans-serif;
-      font-weight: 800;
-      font-size: 28px;
-      line-height: 1.05;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 34px;
+      line-height: 1;
       letter-spacing: -0.02em;
       color: var(--ink);
       margin: 0 0 20px;
@@ -359,16 +442,16 @@
       overflow-y: auto;
       padding-right: 6px;
       scrollbar-width: thin;
-      scrollbar-color: var(--paper-deep) transparent;
+      scrollbar-color: rgba(0,0,0,0.18) transparent;
     }
     .wall::-webkit-scrollbar { width: 6px; }
-    .wall::-webkit-scrollbar-thumb { background: var(--paper-deep); border-radius: 3px; }
+    .wall::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); border-radius: 3px; }
 
     .note {
       padding: 16px 14px 14px;
-      border-radius: 4px;
-      box-shadow: 0 8px 18px rgba(15,23,42,0.10), 0 1px 0 rgba(15,23,42,0.04) inset;
-      font-family: 'Inter', system-ui, sans-serif;
+      border-radius: 0;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.10), 0 1px 0 rgba(0,0,0,0.04) inset;
+      font-family: var(--font-body);
       font-size: 14px;
       font-weight: 500;
       line-height: 1.45;
@@ -388,32 +471,32 @@
       width: 44px;
       height: 14px;
       background: rgba(255,255,255,0.65);
-      border: 1px solid rgba(15,23,42,0.06);
-      box-shadow: 0 2px 4px rgba(15,23,42,0.06);
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
     }
     .note .who {
       display: block;
       margin-top: 10px;
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: lowercase;
       color: var(--ink-soft);
     }
-    .note:nth-child(6n+1) { background: var(--postit-yellow); --tilt: -1.6deg; }
-    .note:nth-child(6n+2) { background: var(--postit-pink);   --tilt:  1.2deg; }
-    .note:nth-child(6n+3) { background: var(--postit-mint);   --tilt: -0.8deg; }
-    .note:nth-child(6n+4) { background: var(--postit-blue);   --tilt:  1.6deg; }
-    .note:nth-child(6n+5) { background: var(--postit-violet); --tilt: -1.1deg; }
-    .note:nth-child(6n+6) { background: var(--postit-peach);  --tilt:  0.9deg; }
+    .note:nth-child(6n+1) { background: var(--postit-cream);  --tilt: -1.6deg; }
+    .note:nth-child(6n+2) { background: var(--postit-teal);   --tilt:  1.2deg; }
+    .note:nth-child(6n+3) { background: var(--postit-yellow); --tilt: -0.8deg; }
+    .note:nth-child(6n+4) { background: var(--postit-orange); --tilt:  1.6deg; }
+    .note:nth-child(6n+5) { background: var(--postit-mint);   --tilt: -1.1deg; }
+    .note:nth-child(6n+6) { background: var(--postit-blush);  --tilt:  0.9deg; }
 
     .empty {
       grid-column: 1 / -1;
       padding: 24px;
       text-align: center;
       color: var(--ink-soft);
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 14px;
       font-style: italic;
     }
@@ -426,24 +509,25 @@
     }
     .field { display: flex; flex-direction: column; gap: 6px; }
     .field label {
-      font-size: 12px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-      font-weight: 500;
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.10em;
+      text-transform: lowercase;
+      color: var(--ink);
+      font-weight: 700;
     }
     .field .req { color: var(--accent); margin-left: 3px; }
     .field input,
     .field textarea {
       width: 100%;
       font: inherit;
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: var(--font-body);
       color: var(--ink);
       background: #FFFFFF;
-      border: 1px solid var(--hairline);
-      border-radius: 8px;
+      border: 2px solid var(--lfg-black);
+      border-radius: 0;
       padding: 11px 12px;
-      transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      transition: box-shadow 160ms ease, background 160ms ease;
     }
     .field textarea {
       min-height: 104px;
@@ -453,9 +537,8 @@
     .field input:focus,
     .field textarea:focus {
       outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(220,38,38,0.18);
-      background: #fff;
+      box-shadow: 4px 4px 0 0 var(--lfg-orange);
+      background: #FFFFFF;
     }
     .field .hint {
       font-size: 12px;
@@ -470,24 +553,26 @@
 
     .submit {
       appearance: none;
-      border: none;
-      background: linear-gradient(180deg, #EF4444 0%, var(--accent) 100%);
-      color: #FFFFFF;
-      font: 700 15px 'Inter', sans-serif;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      padding: 14px 18px;
-      border-radius: 10px;
+      border: 2px solid var(--lfg-black);
+      background: var(--lfg-orange);
+      color: var(--lfg-black);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.01em;
+      text-transform: lowercase;
+      padding: 14px 22px;
+      border-radius: 0;
       cursor: pointer;
-      box-shadow: 0 8px 18px rgba(220,38,38,0.32), inset 0 1px 0 rgba(255,255,255,0.22);
+      box-shadow: 5px 5px 0 0 var(--lfg-black);
       transition: transform 120ms ease, box-shadow 200ms ease, opacity 160ms ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
     }
-    .submit:hover { transform: translateY(-1px); box-shadow: 0 12px 24px rgba(220,38,38,0.36), inset 0 1px 0 rgba(255,255,255,0.22); }
-    .submit:active { transform: translateY(0); }
+    .submit:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 0 var(--lfg-black); }
+    .submit:active { transform: translate(2px, 2px); box-shadow: 3px 3px 0 0 var(--lfg-black); }
     .submit:disabled {
       opacity: 0.55;
       cursor: not-allowed;
@@ -523,30 +608,32 @@
       padding: 24px 12px;
     }
     .thanks .mark {
-      width: 56px; height: 56px;
-      border-radius: 50%;
-      background: linear-gradient(180deg, #EF4444 0%, var(--accent) 100%);
-      color: #FFFFFF;
+      width: 60px; height: 60px;
+      border-radius: 0;
+      background: var(--lfg-orange);
+      color: var(--lfg-black);
+      border: 2px solid var(--lfg-black);
       display: grid;
       place-items: center;
-      font-size: 28px;
-      font-weight: 800;
-      font-family: 'Inter', sans-serif;
-      box-shadow: 0 8px 18px rgba(220,38,38,0.30);
+      font-size: 30px;
+      font-weight: 700;
+      font-family: var(--font-display);
+      box-shadow: 4px 4px 0 0 var(--lfg-black);
     }
     .thanks h3 {
-      font-family: 'Inter', system-ui, sans-serif;
-      font-weight: 800;
-      font-size: 32px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 36px;
       letter-spacing: -0.02em;
+      text-transform: lowercase;
       color: var(--ink);
       margin: 6px 0 0;
     }
     .thanks p {
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 14px;
       color: var(--ink-soft);
-      max-width: 30ch;
+      max-width: 32ch;
       margin: 0;
       line-height: 1.45;
     }
@@ -559,16 +646,21 @@
     }
     .share-btn {
       background: #FFFFFF;
-      border: 1px solid var(--hairline);
-      border-radius: 999px;
-      padding: 9px 14px;
-      font: 600 13px 'Inter', sans-serif;
+      border: 2px solid var(--lfg-black);
+      border-radius: 0;
+      padding: 8px 14px;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: lowercase;
       color: var(--ink);
       cursor: pointer;
-      transition: background 160ms ease, border-color 160ms ease, transform 120ms ease;
+      transition: transform 120ms ease, box-shadow 160ms ease;
       text-decoration: none;
+      box-shadow: 3px 3px 0 0 var(--lfg-black);
     }
-    .share-btn:hover { background: var(--paper-shade); border-color: rgba(15,23,42,0.18); transform: translateY(-1px); }
+    .share-btn:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 0 var(--lfg-black); }
+    .share-btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 0 var(--lfg-black); }
 
     .form-shown .sign-form { display: flex; }
     .form-shown .thanks { display: none; }
@@ -580,11 +672,23 @@
       margin-top: 32px;
       text-align: center;
       color: var(--ink-soft);
+      font-family: var(--font-body);
       font-size: 12px;
       font-weight: 500;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
+      line-height: 1.5;
     }
     .credit em { color: var(--ink); font-style: italic; }
+    .credit-attr {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .credit-attr a { color: inherit; text-decoration: none; border-bottom: 2px solid var(--lfg-orange); padding-bottom: 1px; }
+    .credit-attr a:hover { background: var(--lfg-orange); color: var(--lfg-black); }
 
     /* Mobile */
     @media (max-width: 760px) {
@@ -619,12 +723,14 @@
 <body>
   <main class="wrap">
     <header class="topbar">
-      <div class="brand">Cheers Keir</div>
+      <div class="brand"><span class="brand-dot" aria-hidden="true"></span>cheers keir</div>
       <div class="ticker" aria-live="polite" aria-atomic="true">
         <span class="ticker-count" id="signatureCount">—</span>
         <span class="ticker-label">people have signed</span>
       </div>
     </header>
+
+    <div class="motif" aria-hidden="true"><span></span><span></span><span></span></div>
 
     <div class="stage">
       <article class="card" id="card" aria-label="A leaving card for the outgoing Prime Minister">
@@ -632,15 +738,15 @@
         <!-- Cover -->
         <section class="cover" id="cover" role="button" tabindex="0" aria-label="Open the card">
           <div class="cover-inner">
-            <div class="cover-eyebrow">From everyone &nbsp;·&nbsp; A small token</div>
-            <h1 class="cover-title">Cheers, <span class="accent">Keir</span></h1>
+            <div class="cover-eyebrow">from everyone<span class="dot" aria-hidden="true"></span>a small token</div>
+            <h1 class="cover-title">cheers, <span class="accent">keir</span></h1>
             <img class="cover-photo" id="coverPhoto" src="keir.avif" alt="Outgoing Prime Minister" onerror="this.style.display='none'; this.parentNode.classList.add('no-photo');" />
             <div class="cover-fallback" aria-hidden="true">
-              <div class="seal">K.S.</div>
-              <div class="seal-sub">Est. July 2024</div>
+              <div class="seal">k.s.</div>
+              <div class="seal-sub">est. july 2024</div>
             </div>
             <p class="cover-caption">A collaborative leaving card for the outgoing Prime Minister. Sign before he goes.</p>
-            <div class="cover-cta" aria-hidden="true">Click to open</div>
+            <div class="cover-cta" aria-hidden="true">click to open</div>
           </div>
         </section>
 
@@ -648,8 +754,8 @@
         <section class="spread" aria-hidden="true" id="spread" inert>
           <!-- LEFT PAGE: messages -->
           <div class="page page-left">
-            <p class="page-eyebrow">From everyone who'd like to say</p>
-            <h2 class="page-title">A few kind words</h2>
+            <p class="page-eyebrow">from everyone who'd like to say</p>
+            <h2 class="page-title">a few kind words</h2>
             <div class="wall" id="wall" aria-live="polite">
               <div class="empty">Loading the kind words…</div>
             </div>
@@ -657,8 +763,8 @@
 
           <!-- RIGHT PAGE: sign form -->
           <div class="page page-right form-shown" id="signPage">
-            <p class="page-eyebrow">A small contribution from</p>
-            <h2 class="page-title">Add your name</h2>
+            <p class="page-eyebrow">a small contribution from</p>
+            <h2 class="page-title">add your name</h2>
 
             <form class="sign sign-form" id="signForm" novalidate>
               <div class="field">
@@ -708,7 +814,7 @@
 
             <div class="thanks" aria-live="polite">
               <div class="mark">✓</div>
-              <h3>Signed.</h3>
+              <h3>signed.</h3>
               <p>If your note's a good one, you'll see it on the wall soon.</p>
               <div class="share-row">
                 <a class="share-btn" id="shareTwitter" href="#" target="_blank" rel="noopener">Share on X</a>
@@ -722,7 +828,10 @@
       </article>
     </div>
 
-    <p class="credit">A parody. Not affiliated with the Prime Minister, his office, or any political party. Made with <em>affection</em>.</p>
+    <p class="credit">
+      A parody. Not affiliated with the Prime Minister, his office, or any political party. Made with <em>affection</em>.<br>
+      <span class="credit-attr">from <a href="https://lookingforgrowth.uk/" target="_blank" rel="noopener">lookingforgrowth.uk</a></span>
+    </p>
   </main>
 
   <script>
@@ -914,7 +1023,7 @@
         if (window.confetti) {
           const burst = (opts) => window.confetti(Object.assign({
             spread: 70, ticks: 200, gravity: 0.9, scalar: 0.9,
-            colors: ['#DC2626', '#F59E0B', '#38BDF8', '#10B981', '#F472B6', '#0F172A']
+            colors: ['#FE5500', '#79CAC4', '#EE9944', '#EBE3D0', '#000000']
           }, opts));
           burst({ particleCount: 80, origin: { y: 0.4 } });
           setTimeout(() => burst({ particleCount: 50, origin: { y: 0.6, x: 0.2 } }), 220);
