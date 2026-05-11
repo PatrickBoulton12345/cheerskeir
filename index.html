@@ -25,7 +25,7 @@
   <!-- Fonts — LFG brand: Octarine for headlines (lowercase), DM Sans for body. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400;1,9..40,500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400;1,9..40,500;1,9..40,700;1,9..40,900&display=swap" rel="stylesheet" />
 
   <!-- Cloudflare Turnstile -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -198,16 +198,22 @@
     }
     .card.is-open { width: min(1040px, 96vw); }
 
-    /* Cover face: visible when closed, flips away on open */
+    /* Cover face — Labour "Change" manifesto pastiche.
+       White bg, photo on the left (~60%), big italic hot-pink wordmark on
+       the right (~40%). Flips away on card open. */
     .cover {
       position: relative;
       z-index: 3;
       width: 100%;
       aspect-ratio: 5 / 7;
-      background: linear-gradient(180deg, var(--paper) 0%, var(--paper-shade) 100%);
+      background: #FFFFFF;
       border-radius: 0;
       box-shadow: var(--shadow);
       overflow: hidden;
+      display: grid;
+      grid-template-columns: 50% 50%;
+      align-items: stretch;
+      container-type: inline-size;
       transform-origin: left center;
       transform-style: preserve-3d;
       transition: transform 900ms cubic-bezier(.7,0,.3,1), box-shadow 600ms ease, opacity 400ms 700ms;
@@ -226,89 +232,46 @@
       pointer-events: none;
     }
 
-    .cover::before {
-      /* thin black inner hairline — LFG poster feel */
-      content: "";
-      position: absolute;
-      inset: 10px;
-      border: 1px solid var(--lfg-black);
-      pointer-events: none;
-    }
-
-    .cover-inner {
-      position: absolute;
-      inset: 28px 22px 20px;
+    .cover-wordmark {
+      grid-column: 2;
+      grid-row: 1;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 14px;
-    }
-    .cover-eyebrow {
-      font-family: var(--font-body);
-      font-weight: 700;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: lowercase;
-      color: var(--ink);
-    }
-    .cover-eyebrow .dot {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      background: var(--lfg-orange);
-      margin: 0 8px;
-      vertical-align: 2px;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 20px 12px 0 8px;
     }
     .cover-title {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: clamp(48px, 9vw, 80px);
-      line-height: 0.92;
-      letter-spacing: -0.03em;
-      color: var(--ink);
+      /* Hot manifesto pink — Labour's "Change" wordmark colour. */
+      font-family: var(--font-body);
+      font-weight: 900;
+      font-style: italic;
+      font-size: clamp(34px, 12.5cqi, 56px);
+      line-height: 0.86;
+      letter-spacing: -0.05em;
+      color: #E91063;
       margin: 0;
-    }
-    /* The LFG underline motif — chunky coloured bar under the key word. */
-    .cover-title .accent {
-      position: relative;
-      display: inline-block;
-      color: var(--ink);
-    }
-    .cover-title .accent::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -2px;
-      height: 8px;
-      background: var(--lfg-orange);
-      z-index: -1;
+      text-transform: lowercase;
     }
     .cover-photo {
-      width: 76%;
-      max-width: 290px;
-      aspect-ratio: 4 / 5;
+      grid-column: 1;
+      grid-row: 1;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      object-position: 50% 22%;
-      border-radius: 0;
-      box-shadow: 0 0 0 5px var(--lfg-black), 8px 8px 0 5px var(--lfg-orange);
-      background: var(--paper-shade);
-      margin: 4px 0 0;
+      object-position: 50% 18%;
+      background: #F4F4F4;
+      display: block;
     }
     .cover-fallback { display: none; }
-    .cover-inner.no-photo .cover-fallback {
+    .cover.no-photo .cover-fallback {
+      grid-column: 1;
+      grid-row: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 12px;
-      width: 76%;
-      max-width: 290px;
-      aspect-ratio: 4 / 5;
-      margin-top: 4px;
-      background: var(--paper-shade);
-      box-shadow: 0 0 0 5px var(--lfg-black), 8px 8px 0 5px var(--lfg-orange);
+      background: #F4F4F4;
     }
     .cover-fallback .seal {
       width: 108px;
@@ -334,33 +297,22 @@
       letter-spacing: 0.14em;
       text-transform: lowercase;
     }
-    .cover-caption {
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--ink-soft);
-      max-width: 30ch;
-      margin-top: 6px;
-      line-height: 1.45;
-    }
     .cover-cta {
-      margin-top: auto;
+      position: absolute;
+      right: 12px;
+      bottom: 10px;
       font-family: var(--font-body);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.16em;
       text-transform: lowercase;
-      color: var(--ink);
+      color: var(--lfg-black);
+      pointer-events: none;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 4px;
     }
-    .cover-cta::before, .cover-cta::after {
-      content: "";
-      width: 20px;
-      height: 2px;
-      background: var(--lfg-orange);
-    }
+    .cover-cta span { color: #E91063; font-weight: 900; }
 
     /* Inside spread: revealed when card is open */
     .spread {
@@ -735,19 +687,17 @@
     <div class="stage">
       <article class="card" id="card" aria-label="A leaving card for the outgoing Prime Minister">
 
-        <!-- Cover -->
-        <section class="cover" id="cover" role="button" tabindex="0" aria-label="Open the card">
-          <div class="cover-inner">
-            <div class="cover-eyebrow">from everyone<span class="dot" aria-hidden="true"></span>a small token</div>
-            <h1 class="cover-title">cheers, <span class="accent">keir</span></h1>
-            <img class="cover-photo" id="coverPhoto" src="keir.avif" alt="Outgoing Prime Minister" onerror="this.style.display='none'; this.parentNode.classList.add('no-photo');" />
-            <div class="cover-fallback" aria-hidden="true">
-              <div class="seal">k.s.</div>
-              <div class="seal-sub">est. july 2024</div>
-            </div>
-            <p class="cover-caption">A collaborative leaving card for the outgoing Prime Minister. Sign before he goes.</p>
-            <div class="cover-cta" aria-hidden="true">click to open</div>
+        <!-- Cover — Labour "Change" manifesto pastiche -->
+        <section class="cover" id="cover" role="button" tabindex="0" aria-label="A leaving card for Keir Starmer. Click to open.">
+          <img class="cover-photo" id="coverPhoto" src="keir.avif" alt="Keir Starmer" onerror="this.style.display='none'; this.parentNode.classList.add('no-photo');" />
+          <div class="cover-fallback" aria-hidden="true">
+            <div class="seal">k.s.</div>
+            <div class="seal-sub">est. july 2024</div>
           </div>
+          <div class="cover-wordmark">
+            <h1 class="cover-title">cheers<br>keir</h1>
+          </div>
+          <div class="cover-cta" aria-hidden="true">click to open <span aria-hidden="true">↗</span></div>
         </section>
 
         <!-- Inside spread -->
