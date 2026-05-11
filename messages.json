@@ -1,36 +1,16 @@
 {
   "messages": [
-    {
-      "message": "Wishing you all the best for whatever comes next. You really did achieve something — we're just still working out what it was.",
-      "name": "An admirer in Hartlepool"
-    },
-    {
-      "message": "Thank you for your service. Sincerely, if briefly.",
-      "name": "Margaret, SW1"
-    },
-    {
-      "message": "I'll always remember the bold pledges. Especially the ones you abandoned within six weeks.",
-      "name": "Daniel"
-    },
-    {
-      "message": "Good luck out there. I hear the private sector is much more forgiving.",
-      "name": "Anonymous"
-    },
-    {
-      "message": "We're so proud of everything you nearly did.",
-      "name": "Office of the Loyal Opposition"
-    },
-    {
-      "message": "Cheers Keir. Don't take it personally — we'd be saying this to any of them.",
-      "name": "A weary voter"
-    },
-    {
-      "message": "Best wishes for retirement. Or whatever this is going to be.",
-      "name": "Anonymous"
-    },
-    {
-      "message": "Will always remember the manifesto. Wish you had too.",
-      "name": "Pete, Brighton"
-    }
+    { "message": "We wish you all the best on your next journey — preferably one without a U-turn.", "name": "An admirer in Hartlepool" },
+    { "message": "Hope you finally find the change you were campaigning about.", "name": "Daniel" },
+    { "message": "May your future pints be enjoyed in peace, with absolutely no photographers in attendance.", "name": "Margaret, SW1" },
+    { "message": "Wishing you a comfortable retirement — generously catered, of course.", "name": "Anonymous" },
+    { "message": "Best of luck with your next role. We trust the pledges will be kept this time.", "name": "Pete, Brighton" },
+    { "message": "May your next bar chart go up just a little.", "name": "A weary voter" },
+    { "message": "Safe travels — Davos isn't going to attend itself.", "name": "Anonymous" },
+    { "message": "Wishing you many fulfilling years far, far away from a lectern.", "name": "Office of the Loyal Opposition" },
+    { "message": "May your next chapter contain dramatically fewer focus groups.", "name": "Anonymous" },
+    { "message": "Here's to a fresh start, a reset, a relaunch, a recalibration, and one more relaunch for luck.", "name": "Concerned citizen" },
+    { "message": "Enjoy the five-a-side. We hear midfield is where you do your best work.", "name": "Anonymous" },
+    { "message": "Wishing you a future as fully costed as the manifesto.", "name": "An old colleague" }
   ]
 }

@@ -6,26 +6,26 @@
   <meta name="robots" content="index, follow" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 
-  <title>Cheers Keir — a collaborative leaving card</title>
-  <meta name="description" content="A collaborative leaving card for the outgoing Prime Minister. Sign before he goes." />
+  <title>Cheers Keir — a fond farewell to the outgoing Prime Minister</title>
+  <meta name="description" content="A national leaving card for Keir Starmer. Sign before he goes." />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Cheers Keir — a collaborative leaving card" />
-  <meta property="og:description" content="A collaborative leaving card for the outgoing Prime Minister. Sign before he goes." />
+  <meta property="og:title" content="Cheers Keir — a fond farewell" />
+  <meta property="og:description" content="A national leaving card for Keir Starmer. Sign before he goes." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://cheerskeir.com/" />
   <meta property="og:image" content="https://cheerskeir.com/og.jpg" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Cheers Keir — a collaborative leaving card" />
-  <meta name="twitter:description" content="A collaborative leaving card for the outgoing Prime Minister. Sign before he goes." />
+  <meta name="twitter:title" content="Cheers Keir — a fond farewell" />
+  <meta name="twitter:description" content="A national leaving card for Keir Starmer. Sign before he goes." />
   <meta name="twitter:image" content="https://cheerskeir.com/og.jpg" />
 
-  <!-- Fonts — LFG brand: Octarine for headlines (lowercase), DM Sans for body. -->
+  <!-- Fonts: Archivo + Archivo Black for headlines, Instrument Serif for italic accents. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400;1,9..40,500;1,9..40,700;1,9..40,900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 
   <!-- Cloudflare Turnstile -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -37,689 +37,825 @@
           defer></script>
 
   <style>
-    /* LFG brand fonts — drop Octarine-Bold.otf + Octarine-Light.otf into /fonts/
-       to activate. Until then, headlines render in DM Sans Black (also a brand
-       font, listed in the bible). */
-    @font-face {
-      font-family: 'Octarine';
-      src: url('fonts/Octarine-Bold.otf') format('opentype');
-      font-weight: 700;
-      font-style: normal;
-      font-display: swap;
-    }
-    @font-face {
-      font-family: 'Octarine';
-      src: url('fonts/Octarine-Light.otf') format('opentype');
-      font-weight: 300;
-      font-style: normal;
-      font-display: swap;
-    }
-
     :root {
-      /* LFG brand palette (per the brand bible) */
-      --lfg-black:   #000000;
-      --lfg-orange:  #FE5500;
-      --lfg-yellow:  #EE9944;
-      --lfg-teal:    #79CAC4;
-      --lfg-cream:   #EBE3D0;
-
-      /* Functional tokens */
-      --paper:       #FFFFFF;
-      --paper-shade: #FAF6EC;          /* slightly cooler cream for card shading */
-      --bg:          var(--lfg-cream);
-      --ink:         var(--lfg-black);
-      --ink-soft:    #4A453B;          /* warm dark on cream */
-      --ink-mute:    #8A8478;
-      --accent:      var(--lfg-orange);
-      --accent-2:    var(--lfg-teal);
-      --accent-3:    var(--lfg-yellow);
-
-      /* Post-its: brand-palette tints */
-      --postit-cream:  #F4ECD7;
-      --postit-teal:   #C2E1DE;
-      --postit-yellow: #F6CFA1;
-      --postit-orange: #FFC5A8;
-      --postit-mint:   #D4E7C9;
-      --postit-blush:  #F2D3CC;
-
-      --hairline:    rgba(0,0,0,0.12);
-      --shadow:      0 22px 50px rgba(0,0,0,0.12), 0 6px 16px rgba(0,0,0,0.06);
-      --shadow-sm:   0 4px 14px rgba(0,0,0,0.08);
-      --radius:      6px;              /* squarer = more LFG */
-      --max:         1100px;
-
-      /* Headline / body font stacks */
-      --font-display: 'Octarine', 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      --font-body:    'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      --paper:       #F4EFE8;
+      --paper-2:     #EBE4D8;
+      --paper-3:     #FAFAF7;
+      --ink:         #18181B;
+      --ink-soft:    #3A3A3F;
+      --muted:       #6B6B6F;
+      --rule:        #1A1A1D;
+      --accent:      #D81B3C;
+      --accent-deep: #A8122D;
+      --accent-tint: #FFF7F8;
+      --hairline:    rgba(0,0,0,0.10);
+      --shadow:      0 30px 60px -30px rgba(20,15,10,0.35), 0 8px 20px -10px rgba(20,15,10,0.18);
+      --shadow-sm:   0 6px 16px -6px rgba(20,15,10,0.18);
+      --font-sans:   'Archivo', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      --font-display:'Archivo Black', 'Archivo', system-ui, sans-serif;
+      --font-serif:  'Instrument Serif', Georgia, 'Times New Roman', serif;
     }
 
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
-
     body {
       min-height: 100vh;
-      background: var(--bg);
+      background:
+        radial-gradient(1200px 700px at 80% -10%, rgba(216,27,60,0.06), transparent 60%),
+        radial-gradient(900px 500px at -10% 110%, rgba(24,24,27,0.06), transparent 60%),
+        var(--paper);
       color: var(--ink);
-      font-family: var(--font-body);
+      font-family: var(--font-sans);
       font-size: 16px;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
-      overflow-x: hidden;
+    }
+    body::before {
+      /* faint paper grain */
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        radial-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
+        radial-gradient(rgba(0,0,0,0.020) 1px, transparent 1px);
+      background-size: 3px 3px, 7px 7px;
+      background-position: 0 0, 1px 2px;
+      mix-blend-mode: multiply;
     }
 
-    /* The LFG graphical motif — three stacked progress bars in brand colours,
-       fixed to the top edge of the page like a campaign banner. */
-    .motif {
+    .page {
       position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      margin: 0 0 20px;
-    }
-    .motif > span { display: block; height: 6px; }
-    .motif > span:nth-child(1) { background: var(--lfg-orange); width: 62%; }
-    .motif > span:nth-child(2) { background: var(--lfg-teal);   width: 38%; }
-    .motif > span:nth-child(3) { background: var(--lfg-black);  width: 18%; }
-
-    .wrap {
-      max-width: var(--max);
+      z-index: 1;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 28px 20px 80px;
-      position: relative;
+      padding: 28px 24px 40px;
     }
 
-    /* Header bar */
+    /* Topbar */
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      color: var(--ink);
-      margin-bottom: 24px;
+      gap: 16px;
+      margin-bottom: 20px;
     }
-    .brand {
-      font-family: var(--font-display);
-      font-size: 26px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+    .topbar .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
       color: var(--ink);
-      line-height: 1;
     }
-    .brand-dot {
+    .topbar .brand .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
       display: inline-block;
-      width: 10px;
-      height: 10px;
-      background: var(--lfg-orange);
-      margin-right: 6px;
-      vertical-align: 1px;
     }
     .ticker {
-      background: var(--lfg-black);
-      color: #FFFFFF;
-      border: none;
-      border-radius: 0;
-      padding: 10px 16px;
       display: inline-flex;
       align-items: baseline;
       gap: 10px;
+      padding: 8px 14px;
+      border: 1px solid var(--hairline);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.6);
     }
     .ticker-count {
       font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 22px;
-      color: var(--lfg-orange);
+      font-size: 16px;
+      color: var(--accent);
       font-variant-numeric: tabular-nums;
       letter-spacing: -0.01em;
       line-height: 1;
     }
     .ticker-label {
-      font-family: var(--font-body);
+      font-family: var(--font-sans);
       font-size: 11px;
       font-weight: 700;
-      color: #FFFFFF;
-      letter-spacing: 0.10em;
-      text-transform: lowercase;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
 
-    /* Stage holds the card in perspective */
+    /* Stage + cards */
     .stage {
-      perspective: 1800px;
-      perspective-origin: 50% 30%;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      max-height: calc(100vh - 180px);
+      position: relative;
+      perspective: 2400px;
     }
-
-    /* The card itself: starts CLOSED (just the cover). Opens to a spread. */
     .card {
-      position: relative;
-      margin: 0 auto;
-      width: min(420px, 92vw);
-      transform-style: preserve-3d;
-      transition: width 800ms cubic-bezier(.2,.7,.2,1) 250ms;
-    }
-    .card.is-open { width: min(1040px, 96vw); }
-
-    /* Cover face — Labour "Change" manifesto pastiche.
-       White bg, photo on the left (~60%), big italic hot-pink wordmark on
-       the right (~40%). Flips away on card open. */
-    .cover {
-      position: relative;
-      z-index: 3;
-      width: 100%;
-      aspect-ratio: 5 / 7;
-      background: #FFFFFF;
-      border-radius: 0;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 50% 50%;
-      align-items: stretch;
-      container-type: inline-size;
-      transform-origin: left center;
-      transform-style: preserve-3d;
-      transition: transform 900ms cubic-bezier(.7,0,.3,1), box-shadow 600ms ease, opacity 400ms 700ms;
-      cursor: pointer;
-      will-change: transform;
-      backface-visibility: hidden;
-    }
-    .card.is-open .cover {
-      /* Pop out of flow so the spread can take the top of the card. */
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: min(420px, 92vw);
-      transform: rotateY(-168deg);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      pointer-events: none;
-    }
-
-    .cover-wordmark {
-      grid-column: 2;
-      grid-row: 1;
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      padding: 20px 12px 0 8px;
-    }
-    .cover-title {
-      /* Hot manifesto pink — Labour's "Change" wordmark colour. */
-      font-family: var(--font-body);
-      font-weight: 900;
-      font-style: italic;
-      font-size: clamp(34px, 12.5cqi, 56px);
-      line-height: 0.86;
-      letter-spacing: -0.05em;
-      color: #E91063;
-      margin: 0;
-      text-transform: lowercase;
-    }
-    .cover-photo {
-      grid-column: 1;
-      grid-row: 1;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: 50% 18%;
-      background: #F4F4F4;
-      display: block;
-    }
-    .cover-fallback { display: none; }
-    .cover.no-photo .cover-fallback {
-      grid-column: 1;
-      grid-row: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background: #F4F4F4;
-    }
-    .cover-fallback .seal {
-      width: 108px;
-      height: 108px;
-      border-radius: 50%;
-      background: var(--lfg-orange);
-      color: var(--lfg-black);
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 28px;
-      letter-spacing: -0.02em;
-      text-transform: lowercase;
-      display: grid;
-      place-items: center;
-      transform: rotate(-6deg);
-      box-shadow: 0 8px 18px rgba(254,85,0,0.30);
-    }
-    .cover-fallback .seal-sub {
-      font-family: var(--font-body);
-      font-weight: 700;
-      font-size: 11px;
-      color: var(--ink);
-      letter-spacing: 0.14em;
-      text-transform: lowercase;
-    }
-    .cover-cta {
-      position: absolute;
-      right: 12px;
-      bottom: 10px;
-      font-family: var(--font-body);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: lowercase;
-      color: var(--lfg-black);
-      pointer-events: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .cover-cta span { color: #E91063; font-weight: 900; }
-
-    /* Inside spread: revealed when card is open */
-    .spread {
-      position: relative;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      background: linear-gradient(180deg, var(--paper) 0%, var(--paper-shade) 100%);
-      border-radius: 0;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      min-height: 620px;
-      opacity: 0;
-      transform: translateY(8px);
-      transition: opacity 500ms 600ms ease, transform 700ms 600ms cubic-bezier(.2,.7,.2,1);
-    }
-    .card.is-open .spread { opacity: 1; transform: translateY(0); }
-
-    /* Fold crease down the middle */
-    .spread::before {
-      content: "";
-      position: absolute;
-      top: 0; bottom: 0;
-      left: 50%;
-      width: 1px;
-      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.18) 12%, rgba(0,0,0,0.18) 88%, transparent);
-      pointer-events: none;
-    }
-    .spread::after {
-      content: "";
       position: absolute;
       inset: 0;
-      pointer-events: none;
-      background-image: radial-gradient(rgba(60,40,15,0.04) 1px, transparent 1px);
-      background-size: 4px 4px;
-      mix-blend-mode: multiply;
-      opacity: 0.5;
+      background: var(--paper-3);
+      border-radius: 6px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 900ms cubic-bezier(.7,.05,.2,1), opacity 500ms ease;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    .card.front {
+      z-index: 2;
+      transform-origin: left center;
+      cursor: pointer;
+    }
+    .card.front.flipped {
+      transform: rotateY(-168deg);
+      cursor: default;
+    }
+    .card.back {
+      z-index: 1;
     }
 
-    .page {
-      padding: 36px 36px 32px;
-      position: relative;
+    /* ===================== FRONT (cover) ===================== */
+    .front-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      height: 100%;
     }
-    .page-eyebrow {
-      font-family: var(--font-body);
+    .portrait-pane {
+      position: relative;
+      background: linear-gradient(180deg, #EDEDEA 0%, #D9D6CF 100%);
+      overflow: hidden;
+      border-right: 1px solid rgba(0,0,0,0.06);
+    }
+    .portrait-pane::after {
+      /* paper edge shadow */
+      content: "";
+      position: absolute;
+      top: 0; right: 0; bottom: 0; width: 24px;
+      background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08));
+      pointer-events: none;
+    }
+    .cover-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: 50% 18%;
+      display: block;
+    }
+    /* Silhouette placeholder if photo fails to load */
+    .silhouette {
+      position: absolute; inset: 0;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .portrait-pane.no-photo .silhouette { display: flex; }
+    .portrait-pane.no-photo .cover-photo { display: none; }
+    .silhouette svg {
+      width: 78%;
+      height: 96%;
+      filter: drop-shadow(0 8px 24px rgba(0,0,0,0.18));
+    }
+    .placeholder-tag {
+      position: absolute;
+      left: 20px; bottom: 18px;
+      font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(0,0,0,0.45);
+      background: rgba(255,255,255,0.55);
+      padding: 6px 10px;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 2px;
+      display: none;
+    }
+    .portrait-pane.no-photo .placeholder-tag { display: inline-block; }
+
+    .word-pane {
+      position: relative;
+      padding: clamp(28px, 4vw, 52px) clamp(28px, 4.5vw, 56px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+      background: var(--paper-3);
+    }
+    .corner-mark {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-sans);
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: lowercase;
-      color: var(--ink);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .corner-mark .left { display: inline-flex; align-items: center; gap: 8px; }
+    .corner-mark .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+    }
+
+    .big-word-wrap { margin-top: -2%; }
+    .eyebrow {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(18px, 2.2vw, 28px);
+      color: var(--ink-soft);
       margin: 0 0 4px;
+      letter-spacing: 0.005em;
+    }
+    .big-word {
+      font-family: var(--font-display);
+      color: var(--accent);
+      font-size: clamp(72px, 11vw, 160px);
+      line-height: 0.84;
+      letter-spacing: -0.035em;
+      margin: 0;
+      text-wrap: balance;
+    }
+    .big-word .comma { color: var(--accent); margin-left: -0.04em; }
+    .sub-word {
+      font-family: var(--font-display);
+      color: var(--ink);
+      font-size: clamp(54px, 8vw, 116px);
+      line-height: 0.84;
+      letter-spacing: -0.035em;
+      margin: 6px 0 0;
+    }
+    .strike {
+      display: inline-block;
+      position: relative;
+      color: var(--ink);
+    }
+    .strike::after {
+      content: "";
+      position: absolute;
+      left: -2%; right: -2%;
+      top: 52%;
+      height: clamp(5px, 0.7vw, 9px);
+      background: var(--accent);
+      transform: rotate(-2.5deg);
+      border-radius: 2px;
+    }
+
+    .front-footer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .blurb {
+      max-width: 330px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink-soft);
+      margin: 0;
+    }
+    .blurb em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.05em;
+    }
+
+    .wish-btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      background: var(--ink);
+      color: var(--paper-3);
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 16px 22px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+      box-shadow: 0 10px 24px -12px rgba(0,0,0,0.45);
+      white-space: nowrap;
+    }
+    .wish-btn:hover { background: var(--accent); transform: translateY(-1px); box-shadow: 0 14px 28px -14px rgba(216,27,60,0.55); }
+    .wish-btn .arrow {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--paper-3);
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .25s ease;
+    }
+    .wish-btn:hover .arrow { transform: translateX(3px); }
+
+    /* ===================== BACK (spread) ===================== */
+    .back-grid {
+      display: grid;
+      grid-template-columns: 0.85fr 1.4fr;
+      height: 100%;
+      background: var(--paper-3);
+    }
+    .back-side {
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.02), transparent 30%),
+        var(--paper-2);
+      padding: clamp(28px, 3.5vw, 44px) clamp(24px, 3.2vw, 40px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid rgba(0,0,0,0.06);
+      position: relative;
+    }
+    .back-side::before {
+      /* binding gutter shadow */
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 18px;
+      background: linear-gradient(90deg, rgba(0,0,0,0.10), transparent);
+      pointer-events: none;
+    }
+    .stamp {
+      align-self: flex-start;
+      border: 1.5px solid var(--accent-deep);
+      color: var(--accent-deep);
+      border-radius: 4px;
+      padding: 8px 12px 7px;
+      font-family: var(--font-sans);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      transform: rotate(-3deg);
+      background: rgba(168,18,45,0.05);
+    }
+    .back-title {
+      font-family: var(--font-display);
+      color: var(--ink);
+      font-size: clamp(36px, 4.6vw, 70px);
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      margin: 22px 0 14px;
+    }
+    .back-title .red { color: var(--accent); }
+    .back-kicker {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(17px, 1.7vw, 22px);
+      color: var(--ink-soft);
+      line-height: 1.35;
+      margin: 0 0 18px;
+      max-width: 36ch;
+    }
+    .back-side .featured {
+      margin: 0;
+      padding: 14px 16px;
+      border-left: 3px solid var(--accent);
+      background: rgba(255,255,255,0.6);
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 15px;
+      line-height: 1.45;
+      color: var(--ink);
+      max-width: 38ch;
+    }
+    .back-side .featured .who {
+      display: block;
+      margin-top: 6px;
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .ghost-btn {
+      appearance: none; border: none; background: transparent;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      padding: 0;
     }
-    .page-eyebrow::before {
-      content: "";
-      display: inline-block;
-      width: 18px;
-      height: 3px;
-      background: var(--lfg-orange);
-    }
-    .page-title {
-      font-family: var(--font-display);
+    .ghost-btn:hover { color: var(--accent); }
+    .signoff {
+      font-size: 11px;
+      color: var(--ink-soft);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
       font-weight: 700;
-      font-size: 34px;
-      line-height: 1;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      margin: 0 0 20px;
+      margin-top: 16px;
     }
 
-    /* Left page: message wall */
-    .wall {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      max-height: 520px;
+    /* Right pane: curated wall (top) + form (bottom) */
+    .wishes-pane {
+      padding: clamp(24px, 2.6vw, 36px) clamp(28px, 3.5vw, 44px);
+      background: var(--paper-3);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      min-height: 0;
+    }
+    .wishes-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid rgba(0,0,0,0.12);
+      padding-bottom: 12px;
+    }
+    .wishes-header h3 {
+      margin: 0;
+      font-family: var(--font-sans);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .wishes-header .count {
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .wish-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
       overflow-y: auto;
-      padding-right: 6px;
+      max-height: 30vh;
+      padding-right: 4px;
       scrollbar-width: thin;
       scrollbar-color: rgba(0,0,0,0.18) transparent;
     }
-    .wall::-webkit-scrollbar { width: 6px; }
-    .wall::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); border-radius: 3px; }
-
-    .note {
-      padding: 16px 14px 14px;
-      border-radius: 0;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.10), 0 1px 0 rgba(0,0,0,0.04) inset;
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 500;
+    .wish-list::-webkit-scrollbar { width: 6px; }
+    .wish-list::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); border-radius: 3px; }
+    .wish {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 14px;
+      padding: 12px 14px;
+      background: #FFFFFF;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 4px;
+    }
+    .wish .num {
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      padding-top: 2px;
+    }
+    .wish .text {
+      font-family: var(--font-sans);
+      font-size: 14.5px;
       line-height: 1.45;
       color: var(--ink);
-      transform: rotate(var(--tilt, -1deg));
-      position: relative;
-      word-wrap: break-word;
-      overflow-wrap: anywhere;
     }
-    .note::before {
-      /* tape */
-      content: "";
-      position: absolute;
-      top: -7px;
-      left: 50%;
-      transform: translateX(-50%) rotate(-3deg);
-      width: 44px;
-      height: 14px;
-      background: rgba(255,255,255,0.65);
-      border: 1px solid rgba(0,0,0,0.06);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-    }
-    .note .who {
-      display: block;
-      margin-top: 10px;
-      font-family: var(--font-body);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.10em;
-      text-transform: lowercase;
-      color: var(--ink-soft);
-    }
-    .note:nth-child(6n+1) { background: var(--postit-cream);  --tilt: -1.6deg; }
-    .note:nth-child(6n+2) { background: var(--postit-teal);   --tilt:  1.2deg; }
-    .note:nth-child(6n+3) { background: var(--postit-yellow); --tilt: -0.8deg; }
-    .note:nth-child(6n+4) { background: var(--postit-orange); --tilt:  1.6deg; }
-    .note:nth-child(6n+5) { background: var(--postit-mint);   --tilt: -1.1deg; }
-    .note:nth-child(6n+6) { background: var(--postit-blush);  --tilt:  0.9deg; }
-
-    .empty {
-      grid-column: 1 / -1;
-      padding: 24px;
-      text-align: center;
-      color: var(--ink-soft);
-      font-family: var(--font-body);
-      font-size: 14px;
+    .wish .text em {
+      font-family: var(--font-serif);
       font-style: italic;
+      font-size: 1.05em;
+    }
+    .wish .who {
+      display: block;
+      margin-top: 6px;
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .empty {
+      padding: 16px;
+      text-align: center;
+      color: var(--muted);
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 14px;
     }
 
-    /* Right page: sign form */
-    .sign {
+    /* Form */
+    .add-yours-eyebrow {
+      margin: 4px 0 0;
+      font-family: var(--font-sans);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink);
+      border-top: 1px solid rgba(0,0,0,0.12);
+      padding-top: 14px;
+    }
+    .sign-form {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
     .field { display: flex; flex-direction: column; gap: 6px; }
     .field label {
-      font-family: var(--font-body);
+      font-family: var(--font-sans);
       font-size: 11px;
-      letter-spacing: 0.10em;
-      text-transform: lowercase;
-      color: var(--ink);
       font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
     }
     .field .req { color: var(--accent); margin-left: 3px; }
     .field input,
     .field textarea {
       width: 100%;
       font: inherit;
-      font-family: var(--font-body);
+      font-family: var(--font-sans);
+      font-size: 14.5px;
       color: var(--ink);
       background: #FFFFFF;
-      border: 2px solid var(--lfg-black);
-      border-radius: 0;
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 4px;
       padding: 11px 12px;
-      transition: box-shadow 160ms ease, background 160ms ease;
+      transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
     }
     .field textarea {
-      min-height: 104px;
+      min-height: 84px;
       resize: vertical;
       line-height: 1.45;
     }
     .field input:focus,
     .field textarea:focus {
       outline: none;
-      box-shadow: 4px 4px 0 0 var(--lfg-orange);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(216,27,60,0.16);
       background: #FFFFFF;
     }
     .field .hint {
-      font-size: 12px;
-      color: var(--ink-soft);
       display: flex;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
     }
-    .field .err { color: var(--accent); font-size: 13px; font-weight: 500; min-height: 1em; }
+    .field .err { color: var(--accent); font-size: 12px; font-weight: 600; min-height: 1em; }
 
     .turnstile-wrap { min-height: 65px; display: flex; align-items: center; }
 
-    .submit {
+    .back-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 6px;
+    }
+    .send-btn {
       appearance: none;
-      border: 2px solid var(--lfg-black);
-      background: var(--lfg-orange);
-      color: var(--lfg-black);
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 17px;
-      letter-spacing: -0.01em;
-      text-transform: lowercase;
-      padding: 14px 22px;
-      border-radius: 0;
+      border: none;
       cursor: pointer;
-      box-shadow: 5px 5px 0 0 var(--lfg-black);
-      transition: transform 120ms ease, box-shadow 200ms ease, opacity 160ms ease;
+      background: var(--accent);
+      color: #FFFFFF;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-family: var(--font-sans);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
+      gap: 12px;
+      transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+      box-shadow: 0 10px 22px -12px rgba(216,27,60,0.6);
     }
-    .submit:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 0 var(--lfg-black); }
-    .submit:active { transform: translate(2px, 2px); box-shadow: 3px 3px 0 0 var(--lfg-black); }
-    .submit:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-    .submit .spinner {
+    .send-btn:hover:not(:disabled) { background: var(--accent-deep); transform: translateY(-1px); }
+    .send-btn:disabled { background: #C8C4BD; color: #6B6B6F; cursor: not-allowed; box-shadow: none; }
+    .send-btn .spinner {
+      display: none;
       width: 14px; height: 14px;
       border: 2px solid currentColor;
       border-right-color: transparent;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
-      display: none;
     }
-    .submit.is-loading .spinner { display: inline-block; }
-    .submit.is-loading .label { opacity: 0.7; }
+    .send-btn.is-loading .spinner { display: inline-block; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .consent {
       font-size: 12px;
-      color: var(--ink-soft);
+      color: var(--muted);
       line-height: 1.45;
+      margin: 0;
     }
     .consent a { color: var(--accent); }
 
-    /* Thank-you state */
-    .thanks {
-      display: none;
+    /* Sent overlay */
+    .sent-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(244,239,232,0.96);
+      display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      gap: 18px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .35s ease;
+      z-index: 5;
+      padding: 40px;
       text-align: center;
-      gap: 10px;
-      padding: 24px 12px;
     }
-    .thanks .mark {
-      width: 60px; height: 60px;
-      border-radius: 0;
-      background: var(--lfg-orange);
-      color: var(--lfg-black);
-      border: 2px solid var(--lfg-black);
-      display: grid;
-      place-items: center;
-      font-size: 30px;
-      font-weight: 700;
+    .sent-overlay.show { opacity: 1; pointer-events: auto; }
+    .sent-overlay .big {
       font-family: var(--font-display);
-      box-shadow: 4px 4px 0 0 var(--lfg-black);
-    }
-    .thanks h3 {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 36px;
-      letter-spacing: -0.02em;
-      text-transform: lowercase;
+      font-size: clamp(48px, 7vw, 108px);
+      line-height: 0.86;
+      letter-spacing: -0.03em;
       color: var(--ink);
-      margin: 6px 0 0;
-    }
-    .thanks p {
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: var(--ink-soft);
-      max-width: 32ch;
       margin: 0;
-      line-height: 1.45;
     }
-    .thanks .share-row {
+    .sent-overlay .big .red { color: var(--accent); }
+    .sent-overlay .quote {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(17px, 1.9vw, 24px);
+      color: var(--ink-soft);
+      max-width: 40ch;
+      margin: 0;
+    }
+    .sent-overlay .share-row {
       display: flex;
       gap: 10px;
-      margin-top: 8px;
+      margin-top: 6px;
       flex-wrap: wrap;
       justify-content: center;
     }
     .share-btn {
       background: #FFFFFF;
-      border: 2px solid var(--lfg-black);
-      border-radius: 0;
-      padding: 8px 14px;
-      font-family: var(--font-body);
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-family: var(--font-sans);
       font-weight: 700;
-      font-size: 13px;
-      text-transform: lowercase;
+      font-size: 12.5px;
+      letter-spacing: 0.06em;
       color: var(--ink);
       cursor: pointer;
-      transition: transform 120ms ease, box-shadow 160ms ease;
       text-decoration: none;
-      box-shadow: 3px 3px 0 0 var(--lfg-black);
+      transition: background 160ms ease, transform 120ms ease;
     }
-    .share-btn:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 0 var(--lfg-black); }
-    .share-btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 0 var(--lfg-black); }
+    .share-btn:hover { background: var(--paper-2); transform: translateY(-1px); }
 
-    .form-shown .sign-form { display: flex; }
-    .form-shown .thanks { display: none; }
-    .form-hidden .sign-form { display: none; }
-    .form-hidden .thanks { display: flex; }
-
-    /* Footer */
+    /* Credit footer */
     .credit {
-      margin-top: 32px;
+      margin: 22px 0 0;
       text-align: center;
-      color: var(--ink-soft);
-      font-family: var(--font-body);
+      color: var(--muted);
       font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.04em;
       line-height: 1.5;
     }
-    .credit em { color: var(--ink); font-style: italic; }
+    .credit em { color: var(--ink-soft); font-style: italic; font-family: var(--font-serif); }
     .credit-attr {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 8px;
+      display: inline-block;
+      margin-top: 6px;
       font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
       color: var(--ink);
     }
-    .credit-attr a { color: inherit; text-decoration: none; border-bottom: 2px solid var(--lfg-orange); padding-bottom: 1px; }
-    .credit-attr a:hover { background: var(--lfg-orange); color: var(--lfg-black); }
-
-    /* Mobile */
-    @media (max-width: 760px) {
-      .wrap { padding: 18px 14px 60px; }
-      .topbar { flex-direction: column; align-items: flex-start; gap: 10px; }
-      .ticker { align-self: center; }
-      .card { width: 100%; max-width: 460px; }
-      .card.is-open { width: 100%; max-width: 460px; }
-      .card.is-open .cover { width: 100%; max-width: 460px; }
-      .spread {
-        grid-template-columns: 1fr;
-        min-height: auto;
-      }
-      .spread::before {
-        left: 0; right: 0; top: 50%; bottom: auto;
-        width: 100%; height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(0,0,0,0.18) 12%, rgba(0,0,0,0.18) 88%, transparent);
-      }
-      .page { padding: 24px 22px; }
-      .wall { max-height: 360px; }
-      .cover-inner { inset: 22px 18px 18px; }
-      .cover-fallback .seal { width: 92px; height: 92px; font-size: 26px; }
+    .credit-attr a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 1px;
     }
+    .credit-attr a:hover { background: var(--accent); color: #FFFFFF; }
 
     /* Reduce motion */
     @media (prefers-reduced-motion: reduce) {
-      .cover, .spread, .card { transition: none !important; }
-      .submit .spinner { animation: none; }
+      .card { transition: none !important; }
+      .send-btn .spinner { animation: none; }
+    }
+
+    /* Mobile */
+    @media (max-width: 880px) {
+      .page { padding: 18px 14px 32px; }
+      .topbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .ticker { align-self: flex-start; width: fit-content; }
+
+      /* On mobile, drop the 3D stage + absolute-positioned cards. Cards become
+         block elements that size to their own content; only one shows at a time
+         (front by default, swap to back when .stage.is-open). This avoids the
+         clipped-content bug at 3/4 aspect ratio on small viewports. */
+      .stage {
+        aspect-ratio: auto;
+        max-height: none;
+        min-height: 0;
+        height: auto;
+        perspective: none;
+        display: block;
+      }
+      .card {
+        position: relative;
+        inset: auto;
+        height: auto;
+        transition: opacity 200ms ease;
+      }
+      .card.back { display: none; }
+      .stage.is-open .card.front { display: none; }
+      .stage.is-open .card.back { display: block; }
+      .card.front.flipped { transform: none; }  /* override desktop flip on mobile */
+
+      .front-grid { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+      .portrait-pane { aspect-ratio: 4 / 5; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.06); }
+      .portrait-pane::after { display: none; }
+      .word-pane { padding: 22px 22px 20px; gap: 16px; }
+      .big-word { font-size: clamp(56px, 18vw, 110px); }
+      .sub-word { font-size: clamp(40px, 12vw, 76px); }
+      .blurb { max-width: none; }
+      .wish-btn { padding: 14px 18px; font-size: 13px; }
+
+      .back-grid { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+      .back-side { padding: 22px 22px 18px; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.06); }
+      .back-side::before { display: none; }
+      .wishes-pane { padding: 20px 22px 22px; }
+      .wish-list { max-height: 220px; }
+      .back-actions { flex-direction: column; align-items: stretch; gap: 12px; }
+      .send-btn { justify-content: center; }
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
+  <main class="page">
+
     <header class="topbar">
-      <div class="brand"><span class="brand-dot" aria-hidden="true"></span>cheers keir</div>
+      <div class="brand"><span class="dot" aria-hidden="true"></span>Cheers Keir</div>
       <div class="ticker" aria-live="polite" aria-atomic="true">
         <span class="ticker-count" id="signatureCount">—</span>
-        <span class="ticker-label">people have signed</span>
+        <span class="ticker-label">well-wishers</span>
       </div>
     </header>
 
-    <div class="motif" aria-hidden="true"><span></span><span></span><span></span></div>
-
     <div class="stage">
-      <article class="card" id="card" aria-label="A leaving card for the outgoing Prime Minister">
 
-        <!-- Cover — Labour "Change" manifesto pastiche -->
-        <section class="cover" id="cover" role="button" tabindex="0" aria-label="A leaving card for Keir Starmer. Click to open.">
-          <img class="cover-photo" id="coverPhoto" src="keir.avif" alt="Keir Starmer" onerror="this.style.display='none'; this.parentNode.classList.add('no-photo');" />
-          <div class="cover-fallback" aria-hidden="true">
-            <div class="seal">k.s.</div>
-            <div class="seal-sub">est. july 2024</div>
-          </div>
-          <div class="cover-wordmark">
-            <h1 class="cover-title">cheers<br>keir</h1>
-          </div>
-          <div class="cover-cta" aria-hidden="true">click to open <span aria-hidden="true">↗</span></div>
-        </section>
+      <!-- BACK (spread) — sits behind the cover, revealed when front flips -->
+      <article class="card back" aria-label="A fond farewell — leave a kind word">
+        <div class="back-grid">
 
-        <!-- Inside spread -->
-        <section class="spread" aria-hidden="true" id="spread" inert>
-          <!-- LEFT PAGE: messages -->
-          <div class="page page-left">
-            <p class="page-eyebrow">from everyone who'd like to say</p>
-            <h2 class="page-title">a few kind words</h2>
-            <div class="wall" id="wall" aria-live="polite">
+          <aside class="back-side">
+            <div>
+              <div class="stamp">With Compliments</div>
+              <h2 class="back-title">From,<br/><span class="red">The&nbsp;Nation</span></h2>
+              <p class="back-kicker">A small chorus of well-wishes for the outgoing Prime Minister. Pick a kind word from the wall, or leave one of your own.</p>
+              <blockquote class="featured" id="featuredQuote">
+                <span id="featuredText">Loading the kind words…</span>
+                <span class="who" id="featuredWho"></span>
+              </blockquote>
+            </div>
+            <div>
+              <button class="ghost-btn" id="backToCover" aria-label="Back to cover">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M12 7H2M6 3 2 7l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Back to cover
+              </button>
+              <p class="signoff">Postmarked · Westminster</p>
+            </div>
+          </aside>
+
+          <section class="wishes-pane" id="signPage">
+            <div class="wishes-header">
+              <h3>Well-wishes received</h3>
+              <span class="count" id="wishesCount">00 / 00</span>
+            </div>
+
+            <div class="wish-list" id="wall" aria-live="polite">
               <div class="empty">Loading the kind words…</div>
             </div>
-          </div>
 
-          <!-- RIGHT PAGE: sign form -->
-          <div class="page page-right form-shown" id="signPage">
-            <p class="page-eyebrow">a small contribution from</p>
-            <h2 class="page-title">add your name</h2>
+            <h4 class="add-yours-eyebrow">Add your own</h4>
 
-            <form class="sign sign-form" id="signForm" novalidate>
+            <form class="sign-form" id="signForm" novalidate>
               <div class="field">
                 <label for="message">Your message <span class="req" aria-hidden="true">*</span></label>
-                <textarea id="message" name="message" required maxlength="280" placeholder="Wishing you all the best for whatever comes next…"></textarea>
+                <textarea id="message" name="message" required maxlength="280" placeholder="Wishing you all the best on your next chapter…"></textarea>
                 <div class="hint">
                   <span>Keep it sharp, not nasty.</span>
                   <span><span id="charCount">0</span>/280</span>
@@ -727,7 +863,7 @@
               </div>
 
               <div class="field">
-                <label for="name">Display name <span style="font-weight:400; text-transform:none; letter-spacing:0; color:var(--ink-soft);">(optional)</span></label>
+                <label for="name">Display name <span style="font-weight:400; text-transform:none; letter-spacing:0; color:var(--muted);">(optional)</span></label>
                 <input id="name" name="name" type="text" maxlength="60" placeholder="What we'll print next to your message" autocomplete="name" />
               </div>
 
@@ -735,15 +871,12 @@
                 <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
                 <input id="email" name="email" type="email" required maxlength="120" placeholder="you@example.com" autocomplete="email" inputmode="email" />
                 <div class="hint">
-                  <span>We'll add you to our newsletter. Unsubscribe any time.</span>
+                  <span>Required. We'll add you to our newsletter — unsubscribe any time.</span>
                 </div>
               </div>
 
               <div class="turnstile-wrap">
-                <!--
-                  TODO: replace data-sitekey with the real key from Cloudflare → Turnstile dashboard.
-                  This is PUBLIC by design; safe to inline.
-                -->
+                <!-- TODO: replace data-sitekey with the real Turnstile site key before launch. -->
                 <div class="cf-turnstile"
                      data-sitekey="0x4AAAAAAA_REPLACE_ME_SITEKEY"
                      data-theme="light"
@@ -752,34 +885,101 @@
 
               <div class="err" id="formError" role="alert" aria-live="assertive"></div>
 
-              <button type="submit" class="submit" id="submitBtn">
-                <span class="spinner" aria-hidden="true"></span>
-                <span class="label">Sign the card</span>
-              </button>
-
-              <p class="consent">
-                By signing you agree to your message appearing on this page if selected, and to receiving occasional updates by email. No tracking pixels, no resold lists.
-              </p>
-            </form>
-
-            <div class="thanks" aria-live="polite">
-              <div class="mark">✓</div>
-              <h3>signed.</h3>
-              <p>If your note's a good one, you'll see it on the wall soon.</p>
-              <div class="share-row">
-                <a class="share-btn" id="shareTwitter" href="#" target="_blank" rel="noopener">Share on X</a>
-                <a class="share-btn" id="shareWhatsApp" href="#" target="_blank" rel="noopener">Share on WhatsApp</a>
-                <button type="button" class="share-btn" id="copyLink">Copy link</button>
+              <div class="back-actions">
+                <p class="consent">By signing you agree to your message appearing on this page if selected, and to receiving occasional updates by email.</p>
+                <button type="submit" class="send-btn" id="submitBtn">
+                  <span class="spinner" aria-hidden="true"></span>
+                  <span class="label">Sign &amp; send</span>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
               </div>
+            </form>
+          </section>
+        </div>
+
+        <!-- Sent overlay -->
+        <div class="sent-overlay" id="sentOverlay" aria-hidden="true">
+          <p class="big">Sent with <span class="red">love.</span></p>
+          <p class="quote" id="sentQuote">Your note's in the pile — see you on the way out.</p>
+          <div class="share-row">
+            <a class="share-btn" id="shareTwitter" href="#" target="_blank" rel="noopener">Share on X</a>
+            <a class="share-btn" id="shareWhatsApp" href="#" target="_blank" rel="noopener">Share on WhatsApp</a>
+            <button type="button" class="share-btn" id="copyLink">Copy link</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- FRONT (cover) — sits on top, flips out of the way on click -->
+      <article class="card front" id="cover" role="button" tabindex="0" aria-label="Open the card. A fond farewell to Keir Starmer.">
+        <div class="front-grid">
+
+          <div class="portrait-pane" id="portraitPane">
+            <img class="cover-photo" id="coverPhoto" src="keir.avif" alt="Keir Starmer" onerror="this.style.display='none'; document.getElementById('portraitPane').classList.add('no-photo');" />
+            <div class="silhouette" aria-hidden="true">
+              <svg viewBox="0 0 300 380" preserveAspectRatio="xMidYMax meet">
+                <defs>
+                  <linearGradient id="suit" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="#2a2a2e" />
+                    <stop offset="1" stop-color="#101012" />
+                  </linearGradient>
+                  <linearGradient id="shirt" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="#f7f5f0" />
+                    <stop offset="1" stop-color="#d8d4cb" />
+                  </linearGradient>
+                </defs>
+                <path d="M30 380 C 40 280, 70 240, 110 230 L 190 230 C 230 240, 260 280, 270 380 Z" fill="url(#suit)" />
+                <path d="M115 232 L 150 300 L 185 232 Z" fill="url(#shirt)" />
+                <path d="M144 232 L 156 232 L 161 280 L 150 360 L 139 280 Z" fill="#3a3a3f" />
+                <path d="M132 200 L 132 235 L 168 235 L 168 200 Z" fill="#cfc9bf" />
+                <ellipse cx="150" cy="160" rx="52" ry="62" fill="#d6d0c5" />
+                <path d="M98 145 C 100 100, 130 80, 150 80 C 175 80, 200 100, 202 150 C 200 130, 180 120, 150 122 C 125 124, 105 130, 98 145 Z" fill="#9d9a93" />
+                <g stroke="#1a1a1d" stroke-width="3" fill="none">
+                  <rect x="112" y="148" width="30" height="22" rx="6" />
+                  <rect x="158" y="148" width="30" height="22" rx="6" />
+                  <line x1="142" y1="159" x2="158" y2="159" />
+                </g>
+              </svg>
+            </div>
+            <div class="placeholder-tag">portrait — drop image as keir.avif</div>
+          </div>
+
+          <div class="word-pane">
+            <div class="corner-mark">
+              <span class="left"><span class="dot" aria-hidden="true"></span>A Fond Farewell · No. 010</span>
+              <span>2026</span>
+            </div>
+
+            <div class="big-word-wrap">
+              <p class="eyebrow">A small note for a</p>
+              <h1 class="big-word">Cheers<span class="comma">,</span></h1>
+              <h2 class="sub-word"><span class="strike">Sir</span> Keir.</h2>
+            </div>
+
+            <div class="front-footer">
+              <p class="blurb">
+                Thanks for the memories, the manifestos, and the <em>many</em> reset moments.
+                Pop inside to leave a kind word — entirely sincere, naturally.
+              </p>
+              <button class="wish-btn" id="openBtn" type="button" aria-label="Open card to wish Keir well">
+                Wish Keir well
+                <span class="arrow" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </button>
             </div>
           </div>
-        </section>
-
+        </div>
       </article>
+
     </div>
 
     <p class="credit">
-      A parody. Not affiliated with the Prime Minister, his office, or any political party. Made with <em>affection</em>.<br>
+      A parody. Not affiliated with the Prime Minister, his office, or any political party. Made with <em>affection</em>.
+      <br>
       <span class="credit-attr">from <a href="https://lookingforgrowth.uk/" target="_blank" rel="noopener">lookingforgrowth.uk</a></span>
     </p>
   </main>
@@ -787,97 +987,113 @@
   <script>
     // ----- Utilities -----
     const $ = (sel, root) => (root || document).querySelector(sel);
-    const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
-
-    function escapeHTML(str) {
-      return String(str).replace(/[&<>"']/g, c => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-      }[c]));
-    }
 
     function isValidEmail(s) {
-      // Conservative client-side check. Server does the real one.
       return typeof s === 'string'
         && s.length <= 120
         && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
     }
 
-    function debounce(fn, ms) {
-      let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
-    }
-
-    // ----- Card open animation -----
-    const card = $('#card');
+    // ----- Card flip -----
     const cover = $('#cover');
+    const stage = $('.stage');
     function openCard() {
-      if (card.classList.contains('is-open')) return;
-      card.classList.add('is-open');
-      const spread = $('#spread');
-      spread.setAttribute('aria-hidden', 'false');
-      spread.removeAttribute('inert');  // re-enable keyboard / AT discovery
-      // After open, move focus to the message field for accessibility
-      setTimeout(() => { $('#message').focus({ preventScroll: true }); }, 1200);
+      if (cover.classList.contains('flipped')) return;
+      cover.classList.add('flipped');
+      stage.classList.add('is-open');
+      cover.setAttribute('aria-expanded', 'true');
+      cover.style.cursor = 'default';
+      setTimeout(() => { $('#message').focus({ preventScroll: true }); }, 1000);
     }
-    cover.addEventListener('click', openCard);
+    function closeCard() {
+      cover.classList.remove('flipped');
+      stage.classList.remove('is-open');
+      cover.setAttribute('aria-expanded', 'false');
+      cover.style.cursor = 'pointer';
+    }
+    cover.addEventListener('click', (e) => {
+      // Don't flip when interacting with elements inside the form on the back (which are below in z but…)
+      if (cover.classList.contains('flipped')) return;
+      openCard();
+    });
     cover.addEventListener('keydown', (e) => {
+      if (cover.classList.contains('flipped')) return;
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCard(); }
     });
+    $('#openBtn').addEventListener('click', (e) => { e.stopPropagation(); openCard(); });
+    $('#backToCover').addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); closeCard(); });
 
-    // ----- Load curated messages -----
+    // ----- Curated messages -----
     //
     // SECURITY: messages.json content is user-authored (Patrick curates it) and
     // must NEVER be rendered via innerHTML / insertAdjacentHTML / setAttribute('on*').
-    // Every field below uses textContent, which renders the value as plain text
-    // even if it contains HTML or script syntax. Do not refactor this loop to use
-    // template strings + innerHTML, even if it feels cleaner — that reintroduces
-    // a JSON-controlled XSS sink.
+    // Every field below uses textContent — safe even if a message contains HTML.
+    let LOADED_MESSAGES = [];
     async function loadMessages() {
       const wall = $('#wall');
       try {
         const res = await fetch('messages.json', { cache: 'no-cache' });
-        if (!res.ok) throw new Error('failed to load messages');
+        if (!res.ok) throw new Error('failed');
         const data = await res.json();
-        const items = Array.isArray(data) ? data : (data.messages || []);
+        LOADED_MESSAGES = Array.isArray(data) ? data : (data.messages || []);
         wall.innerHTML = '';
-        if (!items.length) {
+        if (!LOADED_MESSAGES.length) {
           const empty = document.createElement('div');
           empty.className = 'empty';
-          empty.textContent = 'Be the first to leave a few kind words.';
+          empty.textContent = 'Be the first to leave a kind word.';
           wall.appendChild(empty);
+          $('#wishesCount').textContent = '00 / 00';
           return;
         }
-        // Render messages safely (textContent only — see SECURITY note above).
-        items.forEach(m => {
-          const note = document.createElement('div');
-          note.className = 'note';
+        LOADED_MESSAGES.forEach((m, i) => {
+          const wish = document.createElement('div');
+          wish.className = 'wish';
+          const num = document.createElement('span');
+          num.className = 'num';
+          num.textContent = String(i + 1).padStart(2, '0');
+          const text = document.createElement('span');
+          text.className = 'text';
           const msg = document.createElement('span');
           msg.textContent = String(m.message || '').slice(0, 320);
-          const who = document.createElement('span');
-          who.className = 'who';
+          text.appendChild(msg);
           const name = (m.name || '').toString().trim();
-          who.textContent = '— ' + (name || 'Anonymous');
-          note.appendChild(msg);
-          note.appendChild(who);
-          wall.appendChild(note);
+          if (name) {
+            const who = document.createElement('span');
+            who.className = 'who';
+            who.textContent = '— ' + name;
+            text.appendChild(who);
+          }
+          wish.appendChild(num);
+          wish.appendChild(text);
+          wall.appendChild(wish);
         });
+        const total = LOADED_MESSAGES.length;
+        $('#wishesCount').textContent = String(total).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+
+        // Pick a featured wish for the left pane (rotates on each page load)
+        const idx = Math.floor(Math.random() * total);
+        const featured = LOADED_MESSAGES[idx];
+        $('#featuredText').textContent = '"' + (featured.message || '') + '"';
+        $('#featuredWho').textContent = featured.name ? '— ' + featured.name : '— Anonymous';
       } catch (err) {
         wall.innerHTML = '';
         const empty = document.createElement('div');
         empty.className = 'empty';
         empty.textContent = 'Messages will appear here once they’re ready.';
         wall.appendChild(empty);
+        $('#featuredText').textContent = 'Be the first to leave a kind word.';
+        $('#featuredWho').textContent = '';
       }
     }
 
     // ----- Signature ticker -----
     function animateCount(el, to, duration = 1200) {
-      const from = 0;
       const start = performance.now();
       const fmt = new Intl.NumberFormat('en-GB');
       function tick(now) {
         const t = Math.min(1, (now - start) / duration);
         const eased = 1 - Math.pow(1 - t, 3);
-        const v = Math.floor(from + (to - from) * eased);
+        const v = Math.floor(to * eased);
         el.textContent = fmt.format(v);
         if (t < 1) requestAnimationFrame(tick);
       }
@@ -896,7 +1112,7 @@
       }
     }
 
-    // ----- Character counter -----
+    // ----- Char counter -----
     const msgInput = $('#message');
     const charCount = $('#charCount');
     msgInput.addEventListener('input', () => {
@@ -907,19 +1123,17 @@
     const form = $('#signForm');
     const submitBtn = $('#submitBtn');
     const formError = $('#formError');
-    const signPage = $('#signPage');
+    const sentOverlay = $('#sentOverlay');
 
     function setError(msg) { formError.textContent = msg || ''; }
 
     function getTurnstileToken() {
-      // Turnstile injects a hidden input named 'cf-turnstile-response' into the form.
       const input = form.querySelector('input[name="cf-turnstile-response"]');
       return input ? input.value : '';
     }
-
     function resetTurnstile() {
       if (window.turnstile && typeof window.turnstile.reset === 'function') {
-        try { window.turnstile.reset(); } catch (e) { /* no-op */ }
+        try { window.turnstile.reset(); } catch (_) {}
       }
     }
 
@@ -931,7 +1145,7 @@
       const email = $('#email').value.trim();
       const token = getTurnstileToken();
 
-      if (!message) { setError('Add a message before signing.'); msgInput.focus(); return; }
+      if (!message) { setError('Leave a message before signing.'); msgInput.focus(); return; }
       if (message.length > 280) { setError('Messages are capped at 280 characters.'); msgInput.focus(); return; }
       if (!isValidEmail(email)) { setError('That email doesn’t look right.'); $('#email').focus(); return; }
       if (!token) { setError('Please complete the human check before signing.'); return; }
@@ -953,7 +1167,6 @@
           submitBtn.classList.remove('is-loading');
           return;
         }
-
         if (!res.ok) {
           let body = {};
           try { body = await res.json(); } catch (_) {}
@@ -965,15 +1178,17 @@
           return;
         }
 
-        // Success!
-        signPage.classList.remove('form-shown');
-        signPage.classList.add('form-hidden');
+        // Success — show the sent overlay
+        // Echo the user's own message as the quote
+        $('#sentQuote').textContent = '"' + message + '"';
+        sentOverlay.classList.add('show');
+        sentOverlay.setAttribute('aria-hidden', 'false');
 
-        // Confetti
+        // Confetti — paper + raspberry palette
         if (window.confetti) {
           const burst = (opts) => window.confetti(Object.assign({
             spread: 70, ticks: 200, gravity: 0.9, scalar: 0.9,
-            colors: ['#FE5500', '#79CAC4', '#EE9944', '#EBE3D0', '#000000']
+            colors: ['#D81B3C', '#A8122D', '#F4EFE8', '#EBE4D8', '#18181B']
           }, opts));
           burst({ particleCount: 80, origin: { y: 0.4 } });
           setTimeout(() => burst({ particleCount: 50, origin: { y: 0.6, x: 0.2 } }), 220);
@@ -983,8 +1198,8 @@
         // Wire share row
         const shareText = encodeURIComponent('I just signed Keir’s leaving card. You should too.');
         const shareUrl  = encodeURIComponent('https://cheerskeir.com/');
-        $('#shareTwitter').href = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`;
-        $('#shareWhatsApp').href = `https://wa.me/?text=${shareText}%20${shareUrl}`;
+        $('#shareTwitter').href = 'https://twitter.com/intent/tweet?text=' + shareText + '&url=' + shareUrl;
+        $('#shareWhatsApp').href = 'https://wa.me/?text=' + shareText + '%20' + shareUrl;
         $('#copyLink').addEventListener('click', async () => {
           try {
             await navigator.clipboard.writeText('https://cheerskeir.com/');
@@ -995,7 +1210,6 @@
           } catch (_) {}
         }, { once: true });
 
-        // Refresh count
         loadCount();
       } catch (err) {
         setError('We couldn’t reach the server. Check your connection and try again.');
