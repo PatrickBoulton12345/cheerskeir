@@ -402,7 +402,7 @@
       font-size: clamp(36px, 4.6vw, 70px);
       line-height: 0.9;
       letter-spacing: -0.03em;
-      margin: 22px 0 14px;
+      margin: 0 0 18px;
     }
     .back-title .red { color: var(--accent); }
     .back-kicker {
@@ -614,8 +614,46 @@
       color: var(--muted);
     }
     .field .err { color: var(--accent); font-size: 12px; font-weight: 600; min-height: 1em; }
+    .err:empty { min-height: 0; padding: 0; margin: 0; }
 
     .turnstile-wrap { min-height: 65px; display: flex; align-items: center; }
+
+    .consent-group {
+      border: 0;
+      padding: 0;
+      margin: 2px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .consent-legend {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 4px;
+      padding: 0;
+    }
+    .radio-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.4;
+      color: var(--ink);
+      cursor: pointer;
+      padding: 2px 0;
+    }
+    .radio-row input[type="radio"] {
+      margin: 0;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
 
     .back-actions {
       display: flex;
@@ -797,21 +835,16 @@
       .back-side::before { display: none; }
       .wishes-pane { padding: 20px 22px 22px; }
       .wish-list { max-height: 220px; }
-      .back-actions { flex-direction: column; align-items: stretch; gap: 12px; }
+      .back-actions { flex-direction: column; align-items: stretch; gap: 10px; }
       .send-btn { justify-content: center; }
+      .sign-form { gap: 10px; }
+      .consent-group { margin-top: 0; }
+      .turnstile-wrap { min-height: 60px; }
     }
   </style>
 </head>
 <body>
   <main class="page">
-
-    <header class="topbar">
-      <div class="brand"><span class="dot" aria-hidden="true"></span>Cheers Keir</div>
-      <div class="ticker" aria-live="polite" aria-atomic="true">
-        <span class="ticker-count" id="signatureCount">—</span>
-        <span class="ticker-label">well-wishers</span>
-      </div>
-    </header>
 
     <div class="stage">
 
@@ -821,9 +854,7 @@
 
           <aside class="back-side">
             <div>
-              <div class="stamp">With Compliments</div>
               <h2 class="back-title">From,<br/><span class="red">The&nbsp;Nation</span></h2>
-              <p class="back-kicker">A small chorus of well-wishes for the outgoing Prime Minister. Pick a kind word from the wall, or leave one of your own.</p>
               <blockquote class="featured" id="featuredQuote">
                 <span id="featuredText">Loading the kind words…</span>
                 <span class="who" id="featuredWho"></span>
@@ -836,7 +867,6 @@
                 </svg>
                 Back to cover
               </button>
-              <p class="signoff">Postmarked · Westminster</p>
             </div>
           </aside>
 
@@ -871,9 +901,21 @@
                 <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
                 <input id="email" name="email" type="email" required maxlength="120" placeholder="you@example.com" autocomplete="email" inputmode="email" />
                 <div class="hint">
-                  <span>Required. We'll add you to our newsletter — unsubscribe any time.</span>
+                  <span>Required. We won't contact you unless you opt in below.</span>
                 </div>
               </div>
+
+              <fieldset class="consent-group">
+                <legend class="consent-legend">Mailing list</legend>
+                <label class="radio-row">
+                  <input type="radio" name="mailingList" value="no" checked />
+                  <span>No thank you</span>
+                </label>
+                <label class="radio-row">
+                  <input type="radio" name="mailingList" value="yes" />
+                  <span>Join our mailing list to hear about events</span>
+                </label>
+              </fieldset>
 
               <div class="turnstile-wrap">
                 <!-- TODO: replace data-sitekey with the real Turnstile site key before launch. -->
@@ -959,8 +1001,8 @@
 
             <div class="front-footer">
               <p class="blurb">
-                Thanks for the memories, the manifestos, and the <em>many</em> reset moments.
-                Pop inside to leave a kind word — entirely sincere, naturally.
+                Thanks to the toolmaker's son for the steps, missions, milestones, and many reset moments.
+                Pop inside to leave a kind word &ndash; entirely sincere, naturally.
               </p>
               <button class="wish-btn" id="openBtn" type="button" aria-label="Open card to wish Keir well">
                 Wish Keir well
@@ -978,8 +1020,6 @@
     </div>
 
     <p class="credit">
-      A parody. Not affiliated with the Prime Minister, his office, or any political party. Made with <em>affection</em>.
-      <br>
       <span class="credit-attr">from <a href="https://lookingforgrowth.uk/" target="_blank" rel="noopener">lookingforgrowth.uk</a></span>
     </p>
   </main>
@@ -1087,6 +1127,7 @@
     }
 
     // ----- Signature ticker -----
+    // No-op when the ticker element isn't present (the topbar may be removed by design).
     function animateCount(el, to, duration = 1200) {
       const start = performance.now();
       const fmt = new Intl.NumberFormat('en-GB');
@@ -1101,6 +1142,7 @@
     }
     async function loadCount() {
       const el = $('#signatureCount');
+      if (!el) return;
       try {
         const res = await fetch('/api/count', { cache: 'no-store' });
         if (!res.ok) throw new Error('count failed');
@@ -1144,6 +1186,8 @@
       const name = $('#name').value.trim();
       const email = $('#email').value.trim();
       const token = getTurnstileToken();
+      const mailingListPick = form.querySelector('input[name="mailingList"]:checked');
+      const mailingList = mailingListPick ? mailingListPick.value === 'yes' : false;
 
       if (!message) { setError('Leave a message before signing.'); msgInput.focus(); return; }
       if (message.length > 280) { setError('Messages are capped at 280 characters.'); msgInput.focus(); return; }
@@ -1157,7 +1201,7 @@
         const res = await fetch('/api/subscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({ message, name, email, turnstileToken: token })
+          body: JSON.stringify({ message, name, email, turnstileToken: token, mailingList })
         });
 
         if (res.status === 429) {

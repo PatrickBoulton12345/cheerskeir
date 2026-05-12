@@ -127,26 +127,34 @@ async function verifyTurnstile(token, ip) {
   }
 }
 
-async function createOrUpdateBrevoContact({ email, name, message }) {
+async function createOrUpdateBrevoContact({ email, name, message, mailingList }) {
   const apiKey = process.env.BREVO_API_KEY;
-  const listIdRaw = process.env.BREVO_LIST_ID;
   if (!apiKey) throw new Error('brevo_api_key_missing');
-  if (!listIdRaw) throw new Error('brevo_list_id_missing');
 
-  const listId = parseInt(listIdRaw, 10);
-  if (!Number.isFinite(listId)) throw new Error('brevo_list_id_invalid');
+  // The list ID is only required when the user has opted in. If they declined,
+  // we still create the contact (so Patrick can curate their message) but with
+  // no listIds — Brevo accepts that, contact is on no list, no marketing.
+  let listIds;
+  if (mailingList) {
+    const listIdRaw = process.env.BREVO_LIST_ID;
+    if (!listIdRaw) throw new Error('brevo_list_id_missing');
+    const listId = parseInt(listIdRaw, 10);
+    if (!Number.isFinite(listId)) throw new Error('brevo_list_id_invalid');
+    listIds = [listId];
+  }
 
   const body = {
     email,
-    listIds: [listId],
     updateEnabled: false,  // first signature wins; duplicates handled below
     attributes: {
       MESSAGE: message.slice(0, BREVO_ATTR_MAX),
       NAME: name || '',
       SOURCE: 'cheerskeir',
       SIGNED_AT: new Date().toISOString(),
+      MAILING_LIST_OPT_IN: !!mailingList,
     },
   };
+  if (listIds) body.listIds = listIds;
 
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 8000);
@@ -178,24 +186,28 @@ async function createOrUpdateBrevoContact({ email, name, message }) {
   const code = (parsed && parsed.code) || '';
 
   if (res.status === 400 && code === 'duplicate_parameter') {
-    // Already on the list — treat as success but don't overwrite their original message.
-    // Best-effort re-add to ensure they're on the right list. Bounded by AbortController
-    // so we don't hold the function open if Brevo hangs.
-    const addCtrl = new AbortController();
-    const addTimer = setTimeout(() => addCtrl.abort(), 4000);
-    try {
-      await fetch(`${BREVO_BASE}/contacts/lists/${listId}/contacts/add`, {
-        method: 'POST',
-        headers: {
-          'api-key': apiKey,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({ emails: [email] }),
-        signal: addCtrl.signal,
-      });
-    } catch (_) { /* best-effort */ }
-    finally { clearTimeout(addTimer); }
+    // Already exists — treat as success but don't overwrite their original message.
+    // Only re-add them to the mailing list if they explicitly opted in *this time*.
+    // (If they previously opted in, they're already on the list; if they previously
+    // opted in but now opted out, we leave them on the list — explicit unsubscribe
+    // is the only way off, which Brevo handles separately.)
+    if (mailingList && listIds) {
+      const addCtrl = new AbortController();
+      const addTimer = setTimeout(() => addCtrl.abort(), 4000);
+      try {
+        await fetch(`${BREVO_BASE}/contacts/lists/${listIds[0]}/contacts/add`, {
+          method: 'POST',
+          headers: {
+            'api-key': apiKey,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({ emails: [email] }),
+          signal: addCtrl.signal,
+        });
+      } catch (_) { /* best-effort */ }
+      finally { clearTimeout(addTimer); }
+    }
     return { created: false, duplicate: true };
   }
 
@@ -233,10 +245,11 @@ module.exports = async function handler(req, res) {
     return jsonResponse(res, 400, { error: msg });
   }
 
-  const messageRaw = sanitizeText((body && body.message) || '').slice(0, MAX_MESSAGE);
-  const nameRaw    = sanitizeText((body && body.name) || '').slice(0, MAX_NAME);
-  const emailRaw   = sanitizeText((body && body.email) || '').slice(0, MAX_EMAIL).toLowerCase();
-  const token      = (body && body.turnstileToken && String(body.turnstileToken)) || '';
+  const messageRaw  = sanitizeText((body && body.message) || '').slice(0, MAX_MESSAGE);
+  const nameRaw     = sanitizeText((body && body.name) || '').slice(0, MAX_NAME);
+  const emailRaw    = sanitizeText((body && body.email) || '').slice(0, MAX_EMAIL).toLowerCase();
+  const token       = (body && body.turnstileToken && String(body.turnstileToken)) || '';
+  const mailingList = body && body.mailingList === true;  // strict boolean — anything else is "no"
 
   if (!messageRaw) return jsonResponse(res, 400, { error: 'Add a message before signing.' });
   if (!emailRaw || !EMAIL_RE.test(emailRaw)) return jsonResponse(res, 400, { error: 'That email doesn’t look right.' });
@@ -258,8 +271,9 @@ module.exports = async function handler(req, res) {
       email: emailRaw,
       name: nameRaw,
       message: messageRaw,
+      mailingList,
     });
-    return jsonResponse(res, 200, { ok: true, duplicate: result.duplicate });
+    return jsonResponse(res, 200, { ok: true, duplicate: result.duplicate, mailingList });
   } catch (err) {
     const m = err && err.message;
     if (m === 'brevo_api_key_missing' || m === 'brevo_list_id_missing' || m === 'brevo_list_id_invalid') {
