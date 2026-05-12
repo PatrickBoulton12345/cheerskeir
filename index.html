@@ -640,16 +640,18 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 14px;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 13px;
       line-height: 1.4;
-      color: var(--ink);
+      color: var(--ink-soft);
       cursor: pointer;
-      padding: 2px 0;
+      padding: 1px 0;
     }
     .radio-row input[type="radio"] {
       margin: 0;
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       accent-color: var(--accent);
       cursor: pointer;
       flex-shrink: 0;
@@ -855,10 +857,6 @@
           <aside class="back-side">
             <div>
               <h2 class="back-title">From,<br/><span class="red">The&nbsp;Nation</span></h2>
-              <blockquote class="featured" id="featuredQuote">
-                <span id="featuredText">Loading the kind words…</span>
-                <span class="who" id="featuredWho"></span>
-              </blockquote>
             </div>
             <div>
               <button class="ghost-btn" id="backToCover" aria-label="Back to cover">
@@ -906,7 +904,6 @@
               </div>
 
               <fieldset class="consent-group">
-                <legend class="consent-legend">Mailing list</legend>
                 <label class="radio-row">
                   <input type="radio" name="mailingList" value="no" checked />
                   <span>No thank you</span>
@@ -1108,21 +1105,27 @@
           wall.appendChild(wish);
         });
         const total = LOADED_MESSAGES.length;
-        $('#wishesCount').textContent = String(total).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+        const countEl = $('#wishesCount');
+        if (countEl) countEl.textContent = String(total).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
 
-        // Pick a featured wish for the left pane (rotates on each page load)
-        const idx = Math.floor(Math.random() * total);
-        const featured = LOADED_MESSAGES[idx];
-        $('#featuredText').textContent = '"' + (featured.message || '') + '"';
-        $('#featuredWho').textContent = featured.name ? '— ' + featured.name : '— Anonymous';
+        // Optional: featured-quote slot. Only populate if those elements exist.
+        const featuredText = $('#featuredText');
+        const featuredWho  = $('#featuredWho');
+        if (featuredText && total) {
+          const featured = LOADED_MESSAGES[Math.floor(Math.random() * total)];
+          featuredText.textContent = '"' + (featured.message || '') + '"';
+          if (featuredWho) featuredWho.textContent = featured.name ? '— ' + featured.name : '— Anonymous';
+        }
       } catch (err) {
         wall.innerHTML = '';
         const empty = document.createElement('div');
         empty.className = 'empty';
         empty.textContent = 'Messages will appear here once they’re ready.';
         wall.appendChild(empty);
-        $('#featuredText').textContent = 'Be the first to leave a kind word.';
-        $('#featuredWho').textContent = '';
+        const featuredText = $('#featuredText');
+        const featuredWho  = $('#featuredWho');
+        if (featuredText) featuredText.textContent = 'Be the first to leave a kind word.';
+        if (featuredWho)  featuredWho.textContent = '';
       }
     }
 
